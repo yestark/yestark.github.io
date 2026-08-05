@@ -10,7 +10,7 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date | undefined;
   tags: string[];
-  alternateHref: string;
+  alternateHref?: string | undefined;
 }
 
 const props = Astro.props;
