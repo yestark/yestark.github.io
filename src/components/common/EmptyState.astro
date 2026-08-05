@@ -21,27 +21,33 @@ const { title, body, marker = '✦' } = Astro.props;
     display: flex;
     gap: 1rem;
     align-items: flex-start;
-    padding: 1.5rem;
+    min-height: 12rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
     border: 1px dashed var(--color-line);
     border-radius: var(--radius-md);
-    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+    background:
+      linear-gradient(rgb(232 184 79 / 3%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(232 184 79 / 3%) 1px, transparent 1px),
+      color-mix(in srgb, var(--color-surface) 82%, transparent);
+    background-size: 2rem 2rem;
   }
 
   .empty-state > span {
     display: grid;
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     flex: none;
     place-items: center;
     border-radius: 50%;
-    background: var(--color-accent-soft);
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-page);
     color: var(--color-accent);
   }
 
   h2,
   p { margin: 0; }
 
-  h2 { font-size: 1rem; }
+  h2 { font-size: 1.15rem; letter-spacing: -0.02em; }
 
   p {
     margin-top: 0.35rem;

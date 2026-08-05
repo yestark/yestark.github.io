@@ -7,28 +7,27 @@ import { getSiteCopy } from '../../lib/site-content';
 
 interface Props {
   language: Language;
-  entries: CollectionEntry<'projects'>[];
+  entries: CollectionEntry<'articles'>[];
 }
 
 const { language, entries } = Astro.props;
-const copy = (await getSiteCopy(language)).projects;
-const ordered = entries.toSorted((left, right) => Number(right.data.featured) - Number(left.data.featured));
+const copy = (await getSiteCopy(language)).articles;
 ---
 
-<section class="content-section shell" data-section="projects">
+<section class="content-section shell" data-section="articles">
   <header>
-    <div class="section-heading"><span>02</span><div><p class="eyebrow">{copy.eyebrow}</p><h2>{copy.title}</h2></div></div>
-    <a href={localizedPath('projects', language)}>{copy.all} <span aria-hidden="true">↗</span></a>
+    <div class="section-heading"><span>01</span><div><p class="eyebrow">{copy.eyebrow}</p><h2>{copy.title}</h2></div></div>
+    <a href={localizedPath('articles', language)}>{copy.all} <span aria-hidden="true">↗</span></a>
   </header>
-  {ordered.length === 0 ? (
-    <EmptyState title={copy.emptyTitle} body={copy.emptyBody} marker="02" />
+  {entries.length === 0 ? (
+    <EmptyState title={copy.emptyTitle} body={copy.emptyBody} marker="01" />
   ) : (
     <div class="card-grid">
-      {ordered.slice(0, 2).map((entry) => (
+      {entries.slice(0, 3).map((entry) => (
         <article data-content-card>
-          <p>{entry.data.featured ? 'Featured' : 'Project'} · {entry.data.language.toUpperCase()}</p>
-          <h3><a href={entryPath('projects', entry)}>{entry.data.title}</a></h3>
-          <p>{entry.data.summary}</p>
+          <p><time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en')}</time> · {entry.data.language.toUpperCase()}</p>
+          <h3><a href={entryPath('articles', entry)}>{entry.data.title}</a></h3>
+          <p>{entry.data.description}</p>
         </article>
       ))}
     </div>
@@ -40,13 +39,13 @@ const ordered = entries.toSorted((left, right) => Number(right.data.featured) - 
   header { display: flex; justify-content: space-between; gap: 1rem; align-items: end; margin-bottom: 2rem; }
   .section-heading { display: flex; gap: 1rem; align-items: flex-start; }
   .section-heading > span { margin-top: 0.2rem; color: var(--color-accent); font-family: ui-monospace, monospace; font-size: 0.72rem; }
-  header .eyebrow { margin: 0 0 0.55rem; }
+  .eyebrow { margin: 0 0 0.55rem; }
   h2 { margin: 0; font-size: clamp(2.2rem, 4vw, 3.75rem); letter-spacing: -0.055em; }
   header > a { padding-bottom: 0.3rem; border-bottom: 1px solid var(--color-line-strong); color: var(--color-accent-bright); font-size: 0.85rem; font-weight: 750; white-space: nowrap; }
   .card-grid { display: grid; gap: 1rem; }
   article { padding: 1.75rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: linear-gradient(145deg, var(--color-surface-2), var(--color-surface)); }
-  article p { margin: 0; color: var(--color-muted); line-height: 1.6; }
-  article h3 { margin: 0.7rem 0; font-size: 1.35rem; letter-spacing: -0.03em; }
-  article h3 a:hover { color: var(--color-accent); }
+  article p { margin: 0; color: var(--color-muted); line-height: 1.65; }
+  article h3 { margin: 0.8rem 0; font-size: 1.45rem; letter-spacing: -0.035em; }
+  article h3 a:hover { color: var(--color-accent-bright); }
   @media (min-width: 48rem) { .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>

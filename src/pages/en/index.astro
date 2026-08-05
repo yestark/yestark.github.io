@@ -1,16 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/home/Hero.astro';
-import ThoughtsPreview from '../../components/home/ThoughtsPreview.astro';
+import ArticlesPreview from '../../components/home/ArticlesPreview.astro';
 import ProjectsPreview from '../../components/home/ProjectsPreview.astro';
 import ContactCTA from '../../components/home/ContactCTA.astro';
 import MiniAbout from '../../components/home/MiniAbout.astro';
-import { translations } from '../../i18n/translations';
 import { getPublishedArticles, getPublishedProjects } from '../../lib/content';
+import { getSiteCopy } from '../../lib/site-content';
 
 const language = 'en';
-const t = translations[language];
-const thoughts = (await getPublishedArticles(language)).slice(0, 3);
+const t = await getSiteCopy(language);
+const articles = (await getPublishedArticles(language)).slice(0, 3);
 const projects = (await getPublishedProjects(language)).toSorted((a, b) => Number(b.data.featured) - Number(a.data.featured)).slice(0, 2);
 ---
 
@@ -23,7 +23,7 @@ const projects = (await getPublishedProjects(language)).toSorted((a, b) => Numbe
   alternateHref="/"
 >
   <Hero language={language} copy={t.hero} />
-  <ThoughtsPreview language={language} entries={thoughts} />
+  <ArticlesPreview language={language} entries={articles} />
   <ProjectsPreview language={language} entries={projects} />
   <ContactCTA language={language} />
   <MiniAbout language={language} />

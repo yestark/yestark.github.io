@@ -1,11 +1,11 @@
 ---
-import { translations } from '../../i18n/translations';
+import type { SiteCopy } from '../../content-contracts';
 import type { Language } from '../../i18n/types';
 import { localizedPath } from '../../lib/routes';
 
 interface Props {
   language: Language;
-  copy: typeof translations.zh.hero | typeof translations.en.hero;
+  copy: SiteCopy['hero'];
 }
 
 const { language, copy } = Astro.props;
@@ -13,15 +13,20 @@ const { language, copy } = Astro.props;
 
 <section class="hero shell" data-section="hero">
   <div class="hero-glow" aria-hidden="true"></div>
-  <p class="status"><span aria-hidden="true"></span>{copy.status}</p>
-  <p class="intro">{copy.intro}</p>
-  <h1>{copy.title}</h1>
-  <p class="hero-body">{copy.body}</p>
-  <div class="hero-actions">
-    <a class="button primary" href={localizedPath('thoughts', language)}>{copy.thoughtsCta}</a>
-    <a class="button secondary" href={localizedPath('about', language)}>{copy.aboutCta}</a>
+  <div class="hero-copy">
+    <p class="status"><span aria-hidden="true"></span>{copy.status}</p>
+    <p class="intro">{copy.intro}</p>
+    <h1>{copy.title}</h1>
+    <p class="hero-body">{copy.body}</p>
+    <div class="hero-actions">
+      <a class="button primary" href={localizedPath('articles', language)}>{copy.articlesCta}</a>
+      <a class="button secondary" href={localizedPath('about', language)}>{copy.aboutCta}</a>
+    </div>
   </div>
-  <aside aria-label={language === 'zh' ? '当前关注' : 'Current focus'}>
+  <div class="orbit" data-orbit aria-hidden="true">
+    <span class="orbit-one"></span><span class="orbit-two"></span><span class="orbit-core">SY</span><i></i>
+  </div>
+  <aside class="focus-list" aria-label={language === 'zh' ? '当前关注' : 'Current focus'}>
     <span>AI-native products</span><span>Full-stack systems</span><span>Ideas worth keeping</span>
   </aside>
 </section>
@@ -29,19 +34,24 @@ const { language, copy } = Astro.props;
 <style>
   .hero {
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(17rem, 0.6fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: center;
     overflow: hidden;
-    padding-block: clamp(5.5rem, 13vw, 10rem) 4rem;
+    min-height: min(48rem, calc(100svh - 6rem));
+    padding-block: clamp(5rem, 11vw, 8.5rem) 3.5rem;
   }
 
   .hero-glow {
     position: absolute;
     z-index: -1;
-    top: 1rem;
-    right: -8rem;
+    top: 0;
+    right: -5rem;
     width: min(42rem, 72vw);
     aspect-ratio: 1;
     border-radius: 50%;
-    background: radial-gradient(circle, rgb(78 92 246 / 24%), rgb(78 92 246 / 0%) 68%);
+    background: radial-gradient(circle, rgb(232 184 79 / 18%), rgb(232 184 79 / 0%) 68%);
     filter: blur(0.25rem);
   }
 
@@ -63,7 +73,7 @@ const { language, copy } = Astro.props;
     height: 0.55rem;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 0 0.3rem rgb(78 92 246 / 13%);
+    box-shadow: 0 0 0 0.3rem rgb(232 184 79 / 13%);
   }
 
   .intro {
@@ -74,10 +84,10 @@ const { language, copy } = Astro.props;
   }
 
   h1 {
-    max-width: 12ch;
+    max-width: 11ch;
     margin: 0.6rem 0 1.25rem;
-    font-size: clamp(3.25rem, 8vw, 7.25rem);
-    line-height: 0.95;
+    font-size: clamp(3.4rem, 7.4vw, 7.2rem);
+    line-height: 0.92;
     letter-spacing: -0.07em;
   }
 
@@ -89,7 +99,7 @@ const { language, copy } = Astro.props;
   }
 
   .hero-actions,
-  aside {
+  .focus-list {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
@@ -112,9 +122,9 @@ const { language, copy } = Astro.props;
   .secondary { border-color: var(--color-line-strong); background: var(--color-surface); color: var(--color-ink); }
   .button:hover { transform: translateY(-1px); }
 
-  aside { margin-top: 4.5rem; }
+  .focus-list { grid-column: 1 / -1; margin-top: 0.5rem; }
 
-  aside span {
+  .focus-list span {
     padding: 0.5rem 0.75rem;
     border: 1px solid var(--color-line);
     border-radius: 999px;
@@ -124,10 +134,25 @@ const { language, copy } = Astro.props;
     font-weight: 700;
   }
 
+  .orbit {
+    position: relative;
+    width: min(23rem, 32vw);
+    aspect-ratio: 1;
+    place-self: center;
+  }
+
+  .orbit > span,
+  .orbit > i { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
+  .orbit-one { width: 94%; height: 42%; border: 1px solid var(--color-line-strong); border-radius: 50%; rotate: -20deg; }
+  .orbit-two { width: 70%; height: 100%; border: 1px solid var(--color-line); border-radius: 50%; rotate: 34deg; }
+  .orbit-core { display: grid; width: 7.5rem; height: 7.5rem; place-items: center; border: 1px solid var(--color-accent); border-radius: 50%; background: radial-gradient(circle, rgb(232 184 79 / 19%), var(--color-page) 72%); color: var(--color-accent-bright); font-size: 1rem; font-weight: 900; letter-spacing: 0.18em; box-shadow: 0 0 5rem rgb(232 184 79 / 14%); }
+  .orbit > i { width: 0.75rem; height: 0.75rem; margin: -34% 0 0 35%; border-radius: 50%; background: var(--color-accent-bright); box-shadow: 0 0 1.5rem var(--color-accent); }
+
   @media (max-width: 48rem) {
-    .hero { padding-top: 4.5rem; }
+    .hero { display: block; min-height: auto; padding-top: 5rem; }
+    .orbit { width: min(18rem, 78vw); margin: 4rem auto 1rem; }
     .hero-actions { flex-direction: column; align-items: stretch; }
     .button { width: 100%; }
-    aside { margin-top: 3rem; }
+    .focus-list { margin-top: 3rem; }
   }
 </style>

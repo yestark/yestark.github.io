@@ -6,9 +6,20 @@ for (const route of ['/', '/en/']) {
     const order = await page.locator('main [data-section]').evaluateAll((nodes) =>
       nodes.map((node) => node.getAttribute('data-section')),
     );
-    expect(order).toEqual(['hero', 'thoughts', 'projects', 'contact', 'mini-about']);
+    expect(order).toEqual(['hero', 'articles', 'projects', 'contact', 'mini-about']);
   });
 }
+
+test('homepage uses the approved Obsidian palette and Article action', async ({ page }) => {
+  await page.goto('/');
+  const tokens = await page.locator('html').evaluate((node) => ({
+    page: getComputedStyle(node).getPropertyValue('--color-page').trim(),
+    accent: getComputedStyle(node).getPropertyValue('--color-accent').trim(),
+  }));
+  expect(tokens).toEqual({ page: '#070806', accent: '#e8b84f' });
+  await expect(page.getByRole('link', { name: '阅读我的文章' })).toHaveAttribute('href', '/articles/');
+  await expect(page.locator('[data-orbit]')).toBeVisible();
+});
 
 test('homepage is honest when no public content exists', async ({ page }) => {
   await page.goto('/');

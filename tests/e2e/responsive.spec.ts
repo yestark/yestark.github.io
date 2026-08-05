@@ -19,7 +19,7 @@ test('mobile homepage preserves approved sections in DOM and vertical order', as
     top: node.getBoundingClientRect().top,
   })));
 
-  expect(layout.map(({ section }) => section)).toEqual(['hero', 'thoughts', 'projects', 'contact', 'mini-about']);
+  expect(layout.map(({ section }) => section)).toEqual(['hero', 'articles', 'projects', 'contact', 'mini-about']);
   expect(layout.map(({ top }) => top)).toEqual([...layout.map(({ top }) => top)].toSorted((a, b) => a - b));
 });
 
