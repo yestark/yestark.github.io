@@ -17,6 +17,12 @@ export function sortPublishedEntries<T extends LocalizedEntry>(entries: readonly
     .toSorted((left, right) => right.data.publishedAt.valueOf() - left.data.publishedAt.valueOf());
 }
 
+export function buildContentPaths<T extends LocalizedEntry>(entries: readonly T[], language: Language) {
+  return sortPublishedEntries(entries)
+    .filter((entry) => entry.data.language === language)
+    .map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
 export function findTranslation<T extends LocalizedEntry>(
   entries: readonly T[],
   entry: T,

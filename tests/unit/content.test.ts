@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findTranslation, sortPublishedEntries } from '../../src/lib/content';
+import { buildContentPaths, findTranslation, sortPublishedEntries } from '../../src/lib/content';
 
 const entries = [
   { id: 'older', data: { language: 'zh' as const, translationKey: 'one', draft: false, publishedAt: new Date('2026-01-01') } },
@@ -17,5 +17,12 @@ describe('findTranslation', () => {
   it('returns the matching translation only when translationKey exists', () => {
     expect(findTranslation(entries, entries[0]!, 'en')?.id).toBe('newer');
     expect(findTranslation(entries, entries[2]!, 'en')).toBeUndefined();
+  });
+});
+
+describe('buildContentPaths', () => {
+  it('returns only public entries for the requested language', () => {
+    const paths = buildContentPaths(entries, 'zh');
+    expect(paths).toEqual([{ params: { id: 'older' }, props: { entry: entries[0] } }]);
   });
 });
