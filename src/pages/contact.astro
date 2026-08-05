@@ -1,0 +1,26 @@
+---
+import CopyEmail from '../components/common/CopyEmail.astro';
+import { siteConfig } from '../config/site';
+import { translations } from '../i18n/translations';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const copy = translations.zh.contact;
+---
+
+<BaseLayout language="zh" page="contact" title="联系 Stark Ye" description={copy.body} alternateHref="/en/contact/">
+  <section class="shell contact-page">
+    <p class="eyebrow">{copy.eyebrow}</p>
+    <h1>{copy.title}</h1>
+    <p>{copy.body}</p>
+    <a class="email-address" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+    <CopyEmail language="zh" />
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-page { max-width: var(--reading-width); padding-block: clamp(3rem, 8vw, 6rem); }
+  .eyebrow { margin: 0 0 0.75rem; }
+  h1 { max-width: 13ch; margin: 0; font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: 1.06; letter-spacing: -0.055em; }
+  h1 + p { max-width: 36rem; margin: 1.5rem 0 0; color: var(--color-muted); font-size: 1.125rem; line-height: 1.75; }
+  .email-address { display: inline-block; margin-block: 2rem 1rem; color: var(--color-accent); font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 800; text-decoration: underline; text-underline-offset: 0.2em; }
+</style>
