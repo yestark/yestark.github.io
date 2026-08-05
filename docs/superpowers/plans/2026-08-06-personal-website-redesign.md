@@ -609,7 +609,7 @@ git commit -m "feat: define localized content contracts"
 
 **Interfaces:**
 - Consumes: `siteConfig`, `translations`, `localizedPath()` from Task 2.
-- Produces: `BaseLayout` props `{ language, page, title, description, alternateHref? }`; consistent header/footer and language navigation for every later page.
+- Produces: `BaseLayout` props `{ language, page, title, description, languageSwitchHref, alternateHref? }`; visible language navigation is independent from optional real-translation SEO metadata.
 
 - [ ] **Step 1: Write failing shell tests**
 
@@ -716,8 +716,8 @@ import type { Language, StaticPage } from '../../i18n/types';
 import { localizedPath } from '../../lib/routes';
 import LanguageSwitch from './LanguageSwitch.astro';
 
-interface Props { language: Language; currentPage: StaticPage; alternateHref: string }
-const { language, currentPage, alternateHref } = Astro.props;
+interface Props { language: Language; currentPage: StaticPage; languageSwitchHref: string }
+const { language, currentPage, languageSwitchHref } = Astro.props;
 const t = translations[language];
 ---
 
@@ -729,7 +729,7 @@ const t = translations[language];
         {siteConfig.navigation.map((page) => (
           <li><a href={localizedPath(page, language)} aria-current={page === currentPage ? 'page' : undefined}>{t.nav[page]}</a></li>
         ))}
-        <li><LanguageSwitch currentLanguage={language} alternateHref={alternateHref} /></li>
+        <li><LanguageSwitch currentLanguage={language} alternateHref={languageSwitchHref} /></li>
       </ul>
     </nav>
   </div>
@@ -774,10 +774,11 @@ interface Props {
   page: StaticPage;
   title: string;
   description: string;
-  alternateHref: string;
+  languageSwitchHref: string;
+  alternateHref?: string;
 }
 
-const { language, page, title, description, alternateHref } = Astro.props;
+const { language, page, title, description, languageSwitchHref, alternateHref } = Astro.props;
 const canonical = new URL(Astro.url.pathname, siteConfig.siteUrl);
 const alternateLanguage = language === 'zh' ? 'en' : 'zh-CN';
 ---
@@ -793,14 +794,14 @@ const alternateLanguage = language === 'zh' ? 'en' : 'zh-CN';
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={alternateLanguage} href={new URL(alternateHref, siteConfig.siteUrl)} />
+    {alternateHref && <link rel="alternate" hreflang={alternateLanguage} href={new URL(alternateHref, siteConfig.siteUrl)} />}
     <link rel="alternate" type="application/rss+xml" title="Stark Ye Thoughts" href="/rss.xml" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">{language === 'zh' ? '跳到主要内容' : 'Skip to content'}</a>
-    <Header language={language} currentPage={page} alternateHref={alternateHref} />
+    <Header language={language} currentPage={page} languageSwitchHref={languageSwitchHref} />
     <main id="main-content" tabindex="-1"><slot /></main>
     <Footer language={language} />
   </body>
@@ -817,7 +818,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { translations } from '../i18n/translations';
 const t = translations.zh;
 ---
-<BaseLayout language="zh" page="home" title="Stark Ye — AI 与全栈产品构建者" description={t.hero.body} alternateHref="/en/">
+<BaseLayout language="zh" page="home" title="Stark Ye — AI 与全栈产品构建者" description={t.hero.body} languageSwitchHref="/en/" alternateHref="/en/">
   <section class="shell"><h1>Stark Ye</h1></section>
 </BaseLayout>
 ```
@@ -830,7 +831,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { translations } from '../../i18n/translations';
 const t = translations.en;
 ---
-<BaseLayout language="en" page="home" title="Stark Ye — AI & Full-stack Builder" description={t.hero.body} alternateHref="/">
+<BaseLayout language="en" page="home" title="Stark Ye — AI & Full-stack Builder" description={t.hero.body} languageSwitchHref="/" alternateHref="/">
   <section class="shell"><h1>Stark Ye</h1></section>
 </BaseLayout>
 ```
@@ -1086,7 +1087,7 @@ const t = translations[language];
 const thoughts = (await getPublishedThoughts(language)).slice(0, 3);
 const projects = (await getPublishedProjects(language)).toSorted((a, b) => Number(b.data.featured) - Number(a.data.featured)).slice(0, 2);
 ---
-<BaseLayout language={language} page="home" title="Stark Ye — AI 与全栈产品构建者" description={t.hero.body} alternateHref="/en/">
+<BaseLayout language={language} page="home" title="Stark Ye — AI 与全栈产品构建者" description={t.hero.body} languageSwitchHref="/en/" alternateHref="/en/">
   <Hero language={language} copy={t.hero} />
   <ThoughtsPreview language={language} entries={thoughts} />
   <ProjectsPreview language={language} entries={projects} />
@@ -1113,7 +1114,7 @@ const t = translations[language];
 const thoughts = (await getPublishedThoughts(language)).slice(0, 3);
 const projects = (await getPublishedProjects(language)).toSorted((a, b) => Number(b.data.featured) - Number(a.data.featured)).slice(0, 2);
 ---
-<BaseLayout language={language} page="home" title="Stark Ye — AI & Full-stack Builder" description={t.hero.body} alternateHref="/">
+<BaseLayout language={language} page="home" title="Stark Ye — AI & Full-stack Builder" description={t.hero.body} languageSwitchHref="/" alternateHref="/">
   <Hero language={language} copy={t.hero} />
   <ThoughtsPreview language={language} entries={thoughts} />
   <ProjectsPreview language={language} entries={projects} />
@@ -1236,14 +1237,15 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date;
   tags: string[];
-  alternateHref: string;
+  languageSwitchHref: string;
+  alternateHref?: string;
 }
 
 const props = Astro.props;
 const locale = props.language === 'zh' ? 'zh-CN' : 'en';
 ---
 
-<BaseLayout language={props.language} page={props.page} title={`${props.title} — Stark Ye`} description={props.description} alternateHref={props.alternateHref}>
+<BaseLayout language={props.language} page={props.page} title={`${props.title} — Stark Ye`} description={props.description} languageSwitchHref={props.languageSwitchHref} alternateHref={props.alternateHref}>
   <article class="content shell">
     <header>
       <p class="eyebrow">{props.page}</p>
@@ -1291,7 +1293,7 @@ const language = 'zh';
 const copy = translations[language].thoughts;
 const entries = await getPublishedThoughts(language);
 ---
-<BaseLayout language={language} page="thoughts" title="想法 — Stark Ye" description={copy.emptyBody} alternateHref="/en/thoughts/">
+<BaseLayout language={language} page="thoughts" title="想法 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/thoughts/" alternateHref="/en/thoughts/">
   <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
   <section class="shell content-list">
     {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ThoughtCard entry={entry} />)}
@@ -1312,7 +1314,7 @@ const language = 'en';
 const copy = translations[language].thoughts;
 const entries = await getPublishedThoughts(language);
 ---
-<BaseLayout language={language} page="thoughts" title="Thoughts — Stark Ye" description={copy.emptyBody} alternateHref="/thoughts/">
+<BaseLayout language={language} page="thoughts" title="Thoughts — Stark Ye" description={copy.emptyBody} languageSwitchHref="/thoughts/" alternateHref="/thoughts/">
   <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
   <section class="shell content-list">
     {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ThoughtCard entry={entry} />)}
@@ -1337,10 +1339,11 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: CollectionEntry<'thoughts'> };
 const translation = findTranslation(await getPublishedThoughts(), entry, 'en');
-const alternateHref = translation ? entryPath('thoughts', translation) : localizedPath('thoughts', 'en');
+const alternateHref = translation ? entryPath('thoughts', translation) : undefined;
+const languageSwitchHref = alternateHref ?? localizedPath('thoughts', 'en');
 const { Content } = await render(entry);
 ---
-<ContentLayout language="zh" page="thoughts" title={entry.data.title} description={entry.data.description} publishedAt={entry.data.publishedAt} updatedAt={entry.data.updatedAt} tags={entry.data.tags} alternateHref={alternateHref}>
+<ContentLayout language="zh" page="thoughts" title={entry.data.title} description={entry.data.description} publishedAt={entry.data.publishedAt} updatedAt={entry.data.updatedAt} tags={entry.data.tags} languageSwitchHref={languageSwitchHref} alternateHref={alternateHref}>
   <Content />
 </ContentLayout>
 ```
@@ -1360,10 +1363,11 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: CollectionEntry<'thoughts'> };
 const translation = findTranslation(await getPublishedThoughts(), entry, 'zh');
-const alternateHref = translation ? entryPath('thoughts', translation) : localizedPath('thoughts', 'zh');
+const alternateHref = translation ? entryPath('thoughts', translation) : undefined;
+const languageSwitchHref = alternateHref ?? localizedPath('thoughts', 'zh');
 const { Content } = await render(entry);
 ---
-<ContentLayout language="en" page="thoughts" title={entry.data.title} description={entry.data.description} publishedAt={entry.data.publishedAt} updatedAt={entry.data.updatedAt} tags={entry.data.tags} alternateHref={alternateHref}>
+<ContentLayout language="en" page="thoughts" title={entry.data.title} description={entry.data.description} publishedAt={entry.data.publishedAt} updatedAt={entry.data.updatedAt} tags={entry.data.tags} languageSwitchHref={languageSwitchHref} alternateHref={alternateHref}>
   <Content />
 </ContentLayout>
 ```
@@ -1496,7 +1500,7 @@ const language = 'zh';
 const copy = translations[language].projects;
 const entries = await getPublishedProjects(language);
 ---
-<BaseLayout language="zh" page="projects" title="项目 — Stark Ye" description={copy.emptyBody} alternateHref="/en/projects/">
+<BaseLayout language="zh" page="projects" title="项目 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/projects/" alternateHref="/en/projects/">
   <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
   <section class="shell content-list">
     {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ProjectCard entry={entry} />)}
@@ -1519,7 +1523,7 @@ const language = 'en';
 const copy = translations[language].projects;
 const entries = await getPublishedProjects(language);
 ---
-<BaseLayout language="en" page="projects" title="Projects — Stark Ye" description={copy.emptyBody} alternateHref="/projects/">
+<BaseLayout language="en" page="projects" title="Projects — Stark Ye" description={copy.emptyBody} languageSwitchHref="/projects/" alternateHref="/projects/">
   <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
   <section class="shell content-list">
     {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ProjectCard entry={entry} />)}
@@ -1544,10 +1548,11 @@ export async function getStaticPaths() {
 }
 const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
 const translation = findTranslation(await getPublishedProjects(), entry, 'en');
-const alternateHref = translation ? entryPath('projects', translation) : localizedPath('projects', 'en');
+const alternateHref = translation ? entryPath('projects', translation) : undefined;
+const languageSwitchHref = alternateHref ?? localizedPath('projects', 'en');
 const { Content } = await render(entry);
 ---
-<ContentLayout language="zh" page="projects" title={entry.data.title} description={entry.data.summary} publishedAt={entry.data.publishedAt} tags={entry.data.tags} alternateHref={alternateHref}>
+<ContentLayout language="zh" page="projects" title={entry.data.title} description={entry.data.summary} publishedAt={entry.data.publishedAt} tags={entry.data.tags} languageSwitchHref={languageSwitchHref} alternateHref={alternateHref}>
   <Content />
   {entry.data.links.length > 0 && <ul class="project-links">{entry.data.links.map((link) => <li><a href={link.url} rel="noreferrer">{link.label}</a></li>)}</ul>}
 </ContentLayout>
@@ -1567,10 +1572,11 @@ export async function getStaticPaths() {
 }
 const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
 const translation = findTranslation(await getPublishedProjects(), entry, 'zh');
-const alternateHref = translation ? entryPath('projects', translation) : localizedPath('projects', 'zh');
+const alternateHref = translation ? entryPath('projects', translation) : undefined;
+const languageSwitchHref = alternateHref ?? localizedPath('projects', 'zh');
 const { Content } = await render(entry);
 ---
-<ContentLayout language="en" page="projects" title={entry.data.title} description={entry.data.summary} publishedAt={entry.data.publishedAt} tags={entry.data.tags} alternateHref={alternateHref}>
+<ContentLayout language="en" page="projects" title={entry.data.title} description={entry.data.summary} publishedAt={entry.data.publishedAt} tags={entry.data.tags} languageSwitchHref={languageSwitchHref} alternateHref={alternateHref}>
   <Content />
   {entry.data.links.length > 0 && <ul class="project-links">{entry.data.links.map((link) => <li><a href={link.url} rel="noreferrer">{link.label}</a></li>)}</ul>}
 </ContentLayout>
@@ -1698,7 +1704,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { translations } from '../i18n/translations';
 const copy = translations.zh.about;
 ---
-<BaseLayout language="zh" page="about" title="关于 Stark Ye" description={copy.body} alternateHref="/en/about/">
+<BaseLayout language="zh" page="about" title="关于 Stark Ye" description={copy.body} languageSwitchHref="/en/about/" alternateHref="/en/about/">
   <article class="shell about-page">
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>
@@ -1720,7 +1726,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { translations } from '../../i18n/translations';
 const copy = translations.en.about;
 ---
-<BaseLayout language="en" page="about" title="About Stark Ye" description={copy.body} alternateHref="/about/">
+<BaseLayout language="en" page="about" title="About Stark Ye" description={copy.body} languageSwitchHref="/about/" alternateHref="/about/">
   <article class="shell about-page">
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>
@@ -1746,7 +1752,7 @@ import { translations } from '../i18n/translations';
 import BaseLayout from '../layouts/BaseLayout.astro';
 const copy = translations.zh.contact;
 ---
-<BaseLayout language="zh" page="contact" title="联系 Stark Ye" description={copy.body} alternateHref="/en/contact/">
+<BaseLayout language="zh" page="contact" title="联系 Stark Ye" description={copy.body} languageSwitchHref="/en/contact/" alternateHref="/en/contact/">
 <section class="shell contact-page">
   <p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.body}</p>
   <a class="email-address" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
@@ -1765,7 +1771,7 @@ import { translations } from '../../i18n/translations';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 const copy = translations.en.contact;
 ---
-<BaseLayout language="en" page="contact" title="Contact Stark Ye" description={copy.body} alternateHref="/contact/">
+<BaseLayout language="en" page="contact" title="Contact Stark Ye" description={copy.body} languageSwitchHref="/contact/" alternateHref="/contact/">
   <section class="shell contact-page">
     <p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.body}</p>
     <a class="email-address" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
