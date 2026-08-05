@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://starkye.com/sitemap-index.xml
