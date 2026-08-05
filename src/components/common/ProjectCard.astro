@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { entryPath } from '../../lib/routes';
+
+const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
+---
+
+<article data-project-card data-content-card>
+  <p>{entry.data.featured ? 'Featured' : 'Project'} · {entry.data.language.toUpperCase()}</p>
+  <h2><a href={entryPath('projects', entry)}>{entry.data.title}</a></h2>
+  <p>{entry.data.summary}</p>
+  <ul>{entry.data.tags.map((tag) => <li>{tag}</li>)}</ul>
+</article>
+
+<style>
+  article { padding: 1.5rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); }
+  p { margin: 0; color: var(--color-muted); line-height: 1.6; }
+  h2 { margin: 0.7rem 0; font-size: 1.35rem; letter-spacing: -0.03em; }
+  h2 a:hover { color: var(--color-accent); }
+  ul { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 1rem 0 0; list-style: none; }
+  li { padding: 0.25rem 0.55rem; border-radius: 999px; background: var(--color-accent-soft); color: var(--color-accent); font-size: 0.75rem; font-weight: 700; }
+</style>
