@@ -1,33 +1,25 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
+import { articleSchema, projectSchema, siteCopySchema } from './content-contracts';
 
-const shared = {
-  title: z.string().min(1),
-  publishedAt: z.coerce.date(),
-  tags: z.array(z.string()).default([]),
-  language: z.enum(['zh', 'en']),
-  draft: z.boolean().default(false),
-  translationKey: z.string().min(1).optional(),
-};
+const articles = defineCollection({
+  loader: glob({ base: './src/content/articles', pattern: '**/*.md' }),
+  schema: articleSchema,
+});
 
 const thoughts = defineCollection({
   loader: glob({ base: './src/content/thoughts', pattern: '**/*.md' }),
-  schema: z.object({
-    ...shared,
-    description: z.string().min(1),
-    updatedAt: z.coerce.date().optional(),
-  }),
+  schema: articleSchema,
 });
 
 const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.md' }),
-  schema: z.object({
-    ...shared,
-    summary: z.string().min(1),
-    featured: z.boolean().default(false),
-    links: z.array(z.object({ label: z.string().min(1), url: z.string().url() })).default([]),
-  }),
+  schema: projectSchema,
 });
 
-export const collections = { thoughts, projects };
+const site = defineCollection({
+  loader: glob({ base: './src/content/site', pattern: '**/*.json' }),
+  schema: siteCopySchema,
+});
+
+export const collections = { articles, thoughts, projects, site };

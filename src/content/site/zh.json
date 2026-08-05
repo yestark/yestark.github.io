@@ -1,0 +1,66 @@
+{
+  "locale": "zh-CN",
+  "hero": {
+    "status": "开放合作",
+    "intro": "Hi, I’m Stark Ye.",
+    "title": "I build useful AI experiences, end to end.",
+    "body": "关注 AI 与全栈产品，把新技术变成可用、可信、能够进入真实工作流的产品，也记录其中的判断与思考。",
+    "articlesCta": "阅读我的文章",
+    "aboutCta": "了解我"
+  },
+  "articles": {
+    "eyebrow": "Articles",
+    "title": "最近的文章",
+    "emptyTitle": "文章正在写作中",
+    "emptyBody": "这里将记录关于 AI、软件与个人思考的内容。",
+    "all": "查看全部"
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "项目档案",
+    "emptyTitle": "正在整理代表项目",
+    "emptyBody": "真实案例准备完成后会在这里发布。",
+    "all": "查看项目"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "有值得一起构建的想法？",
+    "body": "欢迎围绕 AI、全栈产品或长期合作联系我。",
+    "email": "yehanchen714@gmail.com",
+    "emailLabel": "发邮件",
+    "copy": "复制邮箱",
+    "copied": "邮箱已复制",
+    "copyFailed": "请手动复制邮箱地址"
+  },
+  "about": {
+    "eyebrow": "About Stark Ye",
+    "title": "在技术能力和产品判断之间，做真正有用的东西。",
+    "body": "AI 与全栈产品构建者，关注技术如何进入真实工作流。",
+    "link": "更多关于我",
+    "sections": {
+      "background": {
+        "title": "经历",
+        "body": "我的实践围绕 AI 应用与产品、全栈开发与系统展开，也持续记录其中的产品判断和值得保留的想法。"
+      },
+      "focus": {
+        "title": "关注方向",
+        "body": "关注能够进入真实工作流的产品与系统。",
+        "items": ["AI-native products", "Full-stack systems", "Product judgment", "Independent ideas"]
+      },
+      "capabilities": {
+        "title": "技术能力",
+        "body": "把产品判断推进到可用体验。",
+        "items": ["AI 应用与产品构建", "全栈开发与系统实现", "从产品判断到可用体验"]
+      },
+      "principle": {
+        "title": "做事原则",
+        "body": "从真实问题出发，保持技术判断清晰，并把想法推进到可以使用的产品。"
+      },
+      "status": {
+        "title": "当前状态",
+        "body": "目前欢迎与合作者和技术同行交流，尤其是围绕 AI 应用、全栈产品与值得推进的想法。"
+      }
+    }
+  },
+  "footer": "Built with intention"
+}

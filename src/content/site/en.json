@@ -1,0 +1,66 @@
+{
+  "locale": "en",
+  "hero": {
+    "status": "Open to collaborate",
+    "intro": "Hi, I’m Stark Ye.",
+    "title": "I build useful AI experiences, end to end.",
+    "body": "I turn emerging technology into useful, dependable products that fit real workflows—and write about the judgment behind the work.",
+    "articlesCta": "Read my articles",
+    "aboutCta": "About me"
+  },
+  "articles": {
+    "eyebrow": "Articles",
+    "title": "Recent articles",
+    "emptyTitle": "Notes in progress",
+    "emptyBody": "Writing about AI, software, and ideas worth keeping.",
+    "all": "View all"
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "Selected work",
+    "emptyTitle": "Case studies in progress",
+    "emptyBody": "Real project stories will appear here when they are ready.",
+    "all": "View projects"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Have something worth building together?",
+    "body": "Reach out about AI, full-stack products, or long-term collaboration.",
+    "email": "yehanchen714@gmail.com",
+    "emailLabel": "Send email",
+    "copy": "Copy email",
+    "copied": "Email copied",
+    "copyFailed": "Please copy the address manually"
+  },
+  "about": {
+    "eyebrow": "About Stark Ye",
+    "title": "Building useful things where engineering meets product judgment.",
+    "body": "An AI and full-stack product builder focused on technology that fits real workflows.",
+    "link": "More about me",
+    "sections": {
+      "background": {
+        "title": "Background",
+        "body": "My work centers on AI applications and products, full-stack development and systems, alongside the product judgment and ideas that shape them."
+      },
+      "focus": {
+        "title": "Focus",
+        "body": "I focus on products and systems that fit real workflows.",
+        "items": ["AI-native products", "Full-stack systems", "Product judgment", "Independent ideas"]
+      },
+      "capabilities": {
+        "title": "Capabilities",
+        "body": "Product judgment carried through to usable experiences.",
+        "items": ["AI application and product development", "Full-stack development and systems", "Product judgment carried through to usable experiences"]
+      },
+      "principle": {
+        "title": "Principle",
+        "body": "Start from real problems, keep the engineering judgment clear, and carry ideas through to usable products."
+      },
+      "status": {
+        "title": "Current status",
+        "body": "I’m open to conversations with collaborators and technical peers around AI applications, full-stack products, and ideas worth developing."
+      }
+    }
+  },
+  "footer": "Built with intention"
+}
