@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { translations } from '../../i18n/translations';
+
+const t = translations.en;
+---
+
+<BaseLayout
+  language="en"
+  page="home"
+  title="Stark Ye — AI & Full-stack Builder"
+  description={t.hero.body}
+  alternateHref="/"
+>
+  <section class="shell"><h1>Stark Ye</h1></section>
+</BaseLayout>

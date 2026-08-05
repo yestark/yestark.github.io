@@ -1,0 +1,98 @@
+---
+import { siteConfig } from '../../config/site';
+import { translations } from '../../i18n/translations';
+import type { Language, StaticPage } from '../../i18n/types';
+import { localizedPath } from '../../lib/routes';
+import LanguageSwitch from './LanguageSwitch.astro';
+
+interface Props {
+  language: Language;
+  currentPage: StaticPage;
+  alternateHref: string;
+}
+
+const { language, currentPage, alternateHref } = Astro.props;
+const t = translations[language];
+---
+
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="monogram" href={localizedPath('home', language)} aria-label={`${siteConfig.name} home`}>
+      {siteConfig.monogram}
+    </a>
+    <nav aria-label={language === 'zh' ? '主导航' : 'Primary navigation'}>
+      <ul>
+        {siteConfig.navigation.map((page) => (
+          <li class={page === 'home' || page === 'thoughts' ? undefined : 'secondary-link'}>
+            <a href={localizedPath(page, language)} aria-current={page === currentPage ? 'page' : undefined}>
+              {t.nav[page]}
+            </a>
+          </li>
+        ))}
+        <li><LanguageSwitch currentLanguage={language} alternateHref={alternateHref} /></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: transparent;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 5rem;
+  }
+
+  .monogram {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: none;
+    place-items: center;
+    border-radius: var(--radius-sm);
+    background: var(--color-ink);
+    color: var(--color-surface);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  ul {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 38rem) {
+    .header-inner {
+      min-height: 4.5rem;
+    }
+
+    ul {
+      gap: 0.875rem;
+    }
+
+    .secondary-link {
+      display: none;
+    }
+  }
+</style>

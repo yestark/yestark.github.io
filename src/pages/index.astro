@@ -1,15 +1,16 @@
 ---
-const title = 'Stark Ye — AI & Full-stack Builder';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { translations } from '../i18n/translations';
+
+const t = translations.zh;
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <main><h1>Stark Ye</h1></main>
-  </body>
-</html>
+<BaseLayout
+  language="zh"
+  page="home"
+  title="Stark Ye — AI 与全栈产品构建者"
+  description={t.hero.body}
+  alternateHref="/en/"
+>
+  <section class="shell"><h1>Stark Ye</h1></section>
+</BaseLayout>

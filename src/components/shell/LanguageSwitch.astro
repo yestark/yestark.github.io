@@ -1,0 +1,32 @@
+---
+import type { Language } from '../../i18n/types';
+
+interface Props {
+  currentLanguage: Language;
+  alternateHref: string;
+}
+
+const { currentLanguage, alternateHref } = Astro.props;
+const label = currentLanguage === 'zh' ? 'English' : '中文';
+---
+
+<a
+  class="language-switch"
+  href={alternateHref}
+  hreflang={currentLanguage === 'zh' ? 'en' : 'zh-CN'}
+>
+  {label}
+</a>
+
+<style>
+  .language-switch {
+    color: var(--color-accent);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .language-switch:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>
