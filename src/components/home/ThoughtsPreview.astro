@@ -7,17 +7,17 @@ import { entryPath, localizedPath } from '../../lib/routes';
 
 interface Props {
   language: Language;
-  entries: CollectionEntry<'thoughts'>[];
+  entries: CollectionEntry<'articles'>[];
 }
 
 const { language, entries } = Astro.props;
-const copy = translations[language].thoughts;
+const copy = translations[language].articles;
 ---
 
-<section class="content-section shell" data-section="thoughts">
+<section class="content-section shell" data-section="articles">
   <header>
     <div><p class="eyebrow">{copy.eyebrow}</p><h2>{copy.title}</h2></div>
-    <a href={localizedPath('thoughts', language)}>{copy.all} →</a>
+    <a href={localizedPath('articles', language)}>{copy.all} →</a>
   </header>
   {entries.length === 0 ? (
     <EmptyState title={copy.emptyTitle} body={copy.emptyBody} />
@@ -26,7 +26,7 @@ const copy = translations[language].thoughts;
       {entries.slice(0, 3).map((entry) => (
         <article data-content-card>
           <p><time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en')}</time> · {entry.data.language.toUpperCase()}</p>
-          <h3><a href={entryPath('thoughts', entry)}>{entry.data.title}</a></h3>
+          <h3><a href={entryPath('articles', entry)}>{entry.data.title}</a></h3>
           <p>{entry.data.description}</p>
         </article>
       ))}

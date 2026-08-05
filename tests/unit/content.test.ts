@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildContentPaths, findTranslation, sortPublishedEntries } from '../../src/lib/content';
+import {
+  buildArchiveEntries,
+  buildContentPaths,
+  collectTags,
+  findTranslation,
+  sortPublishedEntries,
+} from '../../src/lib/content';
 
 const entries = [
   { id: 'older', data: { language: 'zh' as const, translationKey: 'one', draft: false, publishedAt: new Date('2026-01-01') } },
@@ -24,5 +30,43 @@ describe('buildContentPaths', () => {
   it('returns only public entries for the requested language', () => {
     const paths = buildContentPaths(entries, 'zh');
     expect(paths).toEqual([{ params: { id: 'older' }, props: { entry: entries[0] } }]);
+  });
+});
+
+describe('unified discovery', () => {
+  const articleEntries = [{
+    id: 'older',
+    data: {
+      title: 'Older note',
+      description: 'An older article',
+      language: 'zh' as const,
+      draft: false,
+      publishedAt: new Date('2026-01-01'),
+      tags: ['AI'],
+    },
+  }];
+  const projectEntries = [{
+    id: 'new-project',
+    data: {
+      title: 'New project',
+      summary: 'A newer project',
+      language: 'zh' as const,
+      draft: false,
+      publishedAt: new Date('2026-02-01'),
+      tags: ['ai'],
+    },
+  }];
+
+  it('merges public Articles and Projects newest first', () => {
+    const archive = buildArchiveEntries(articleEntries, projectEntries, 'zh');
+    expect(archive.map(({ type, id }) => `${type}:${id}`)).toEqual([
+      'project:new-project',
+      'article:older',
+    ]);
+  });
+
+  it('aggregates Tags case-insensitively', () => {
+    const archive = buildArchiveEntries(articleEntries, projectEntries, 'zh');
+    expect(collectTags(archive)).toEqual([{ name: 'AI', slug: 'ai', count: 2 }]);
   });
 });

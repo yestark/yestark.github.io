@@ -2,12 +2,12 @@
 import type { CollectionEntry } from 'astro:content';
 import { entryPath } from '../../lib/routes';
 
-const { entry } = Astro.props as { entry: CollectionEntry<'thoughts'> };
+const { entry } = Astro.props as { entry: CollectionEntry<'articles'> };
 ---
 
 <article data-thought-card data-content-card>
   <p><time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toLocaleDateString(entry.data.language === 'zh' ? 'zh-CN' : 'en')}</time> · {entry.data.language.toUpperCase()}</p>
-  <h2><a href={entryPath('thoughts', entry)}>{entry.data.title}</a></h2>
+  <h2><a href={entryPath('articles', entry)}>{entry.data.title}</a></h2>
   <p>{entry.data.description}</p>
   <ul>{entry.data.tags.map((tag) => <li>{tag}</li>)}</ul>
 </article>
