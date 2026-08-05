@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { collectTags, getArchiveEntries } from '../../../lib/content';
+import { normalizeTagSlug } from '../../../lib/tags';
+export async function getStaticPaths() {
+  const entries = await getArchiveEntries('en');
+  return collectTags(entries).map((tag) => ({ params: { tag: tag.slug }, props: { tag, entries: entries.filter((entry) => entry.tags.some((name) => normalizeTagSlug(name) === tag.slug)) } }));
+}
+const { tag, entries } = Astro.props;
+---
+<BaseLayout language="en" page="archive" title={`${tag.name} — Stark Ye`} description={`Articles and Projects tagged ${tag.name}.`} languageSwitchHref="/tags/">
+  <section class="shell tag-detail"><p class="eyebrow">Tag</p><h1>{tag.name}</h1><p>{entries.length} public items</p><ol>{entries.map((entry) => <li><span>{entry.type === 'article' ? 'Article' : 'Project'}</span><a href={entry.href}>{entry.title}</a><p>{entry.summary}</p></li>)}</ol></section>
+</BaseLayout>
+<style>.tag-detail{padding-block:clamp(4rem,9vw,7rem)}.eyebrow{margin:0 0 .75rem}h1{margin:0;font-size:clamp(3rem,8vw,6rem);letter-spacing:-.06em}.tag-detail>p:not(.eyebrow){color:var(--color-muted)}ol{display:grid;margin:3rem 0 0;padding:0;list-style:none}li{padding:1.5rem 0;border-top:1px solid var(--color-line)}li span{color:var(--color-accent);font-size:.72rem;font-weight:800}li a{display:block;margin:.4rem 0;font-size:1.4rem;font-weight:800}li p{margin:0;color:var(--color-muted)}</style>

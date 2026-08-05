@@ -1,0 +1,14 @@
+---
+import ArchiveList from '../../components/archive/ArchiveList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { collectTags, getArchiveEntries } from '../../lib/content';
+
+const language = 'zh';
+const entries = await getArchiveEntries(language);
+const tags = collectTags(entries);
+---
+<BaseLayout language={language} page="archive" title="归档 — Stark Ye" description="按时间、内容类型与标签浏览公开文章和项目。" languageSwitchHref="/en/archive/" alternateHref="/en/archive/">
+  <section class="shell page-intro"><p class="eyebrow">Archive</p><h1>归档</h1><p>按时间、内容类型与标签浏览公开文章和项目。</p></section>
+  <section class="shell archive-content"><ArchiveList language={language} entries={entries} tags={tags} /></section>
+</BaseLayout>
+<style>.page-intro{padding-top:clamp(4rem,9vw,7rem)}.eyebrow{margin:0 0 .75rem}h1{margin:0;font-size:clamp(3rem,8vw,6.5rem);line-height:.95;letter-spacing:-.065em}.page-intro>p:last-child{max-width:40rem;margin:1.25rem 0 0;color:var(--color-muted);line-height:1.7}.archive-content{padding-block:3rem 7rem}</style>

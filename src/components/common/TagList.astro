@@ -1,0 +1,19 @@
+---
+import type { Language } from '../../i18n/types';
+import type { TagSummary } from '../../lib/tags';
+import { tagPath } from '../../lib/tags';
+
+const { language, tags } = Astro.props as { language: Language; tags: TagSummary[] };
+---
+
+<ul class="tag-cloud">
+  {tags.map((tag) => <li><a href={tagPath(tag.name, language)}><span>{tag.name}</span><small>{tag.count}</small></a></li>)}
+</ul>
+
+<style>
+  .tag-cloud { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  a { display: flex; justify-content: space-between; gap: 1rem; padding: 1.15rem 1.25rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); }
+  a:hover { border-color: var(--color-accent); background: var(--color-accent-soft); }
+  span { color: var(--color-accent-bright); font-weight: 750; }
+  small { display: grid; min-width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: var(--color-page); color: var(--color-muted); }
+</style>

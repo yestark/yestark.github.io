@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { entryPath } from '../../lib/routes';
+import { tagPath } from '../../lib/tags';
 
 const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
 ---
@@ -9,7 +10,7 @@ const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
   <p>{entry.data.featured ? 'Featured' : 'Project'} · {entry.data.language.toUpperCase()}</p>
   <h2><a href={entryPath('projects', entry)}>{entry.data.title}</a></h2>
   <p>{entry.data.summary}</p>
-  <ul>{entry.data.tags.map((tag) => <li>{tag}</li>)}</ul>
+  <ul aria-label={entry.data.language === 'zh' ? '标签' : 'Tags'}>{entry.data.tags.map((tag) => <li><a href={tagPath(tag, entry.data.language)}>{tag}</a></li>)}</ul>
 </article>
 
 <style>
@@ -19,4 +20,5 @@ const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
   h2 a:hover { color: var(--color-accent); }
   ul { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 1rem 0 0; list-style: none; }
   li { padding: 0.25rem 0.55rem; border-radius: 999px; background: var(--color-accent-soft); color: var(--color-accent); font-size: 0.75rem; font-weight: 700; }
+  li a:hover { color: var(--color-accent-bright); }
 </style>

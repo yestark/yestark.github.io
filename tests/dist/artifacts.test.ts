@@ -6,9 +6,16 @@ const dist = join(process.cwd(), 'dist');
 const siteUrl = 'https://starkye.com';
 const requiredRoutes = [
   'index.html', 'en/index.html', 'about/index.html', 'en/about/index.html',
-  'thoughts/index.html', 'en/thoughts/index.html', 'projects/index.html',
-  'en/projects/index.html', 'contact/index.html', 'en/contact/index.html', '404.html',
+  'articles/index.html', 'en/articles/index.html', 'projects/index.html',
+  'en/projects/index.html', 'archive/index.html', 'en/archive/index.html',
+  'tags/index.html', 'en/tags/index.html', 'contact/index.html', 'en/contact/index.html',
+  'thoughts/index.html', 'en/thoughts/index.html', '404.html',
 ];
+
+const canonicalRedirects = new Map([
+  ['thoughts/index.html', `${siteUrl}/articles/`],
+  ['en/thoughts/index.html', `${siteUrl}/en/articles/`],
+]);
 
 function htmlFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((name) => {
@@ -76,7 +83,10 @@ describe('GitHub Pages artifact', () => {
       if (file === join(dist, '404.html')) {
         expect(canonicalHrefs, `${file} canonical`).toEqual([]);
       } else {
-        expect(canonicalHrefs, `${file} canonical`).toEqual([canonical]);
+        const outputPath = relative(dist, file).replaceAll('\\', '/');
+        expect(canonicalHrefs, `${file} canonical`).toEqual([
+          canonicalRedirects.get(outputPath) ?? canonical,
+        ]);
       }
 
       const language = attributes(html.match(/<html\b[^>]*>/i)?.[0] ?? '').lang;

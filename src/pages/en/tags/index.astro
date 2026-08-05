@@ -1,0 +1,13 @@
+---
+import EmptyState from '../../../components/common/EmptyState.astro';
+import TagList from '../../../components/common/TagList.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { collectTags, getArchiveEntries } from '../../../lib/content';
+const language = 'en';
+const tags = collectTags(await getArchiveEntries(language));
+---
+<BaseLayout language={language} page="archive" title="Tags — Stark Ye" description="Find public Articles and Projects by Tag." languageSwitchHref="/tags/" alternateHref="/tags/">
+  <section class="shell page-intro"><p class="eyebrow">Discovery</p><h1>Tags</h1><p>Find public Articles and Projects by Tag.</p></section>
+  <section class="shell tag-content">{tags.length ? <TagList language={language} tags={tags} /> : <EmptyState title="No public Tags yet" body="Add Tags to an Article or Project and they will appear here automatically." />}</section>
+</BaseLayout>
+<style>.page-intro{padding-top:clamp(4rem,9vw,7rem)}.eyebrow{margin:0 0 .75rem}h1{margin:0;font-size:clamp(3rem,8vw,6.5rem);line-height:.95;letter-spacing:-.065em}.page-intro>p:last-child{margin:1.25rem 0 0;color:var(--color-muted)}.tag-content{padding-block:3rem 7rem}</style>

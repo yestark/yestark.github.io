@@ -94,7 +94,7 @@ async function linkDependencies(): Promise<void> {
   await mkdir(destination);
 
   for (const entry of await readdir(source, { withFileTypes: true })) {
-    if (entry.name === '.astro') continue;
+    if (entry.name === '.astro' || entry.name === '.vite') continue;
     await symlink(join(source, entry.name), join(destination, entry.name));
   }
 }

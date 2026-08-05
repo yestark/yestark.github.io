@@ -1,0 +1,95 @@
+---
+import EmptyState from '../common/EmptyState.astro';
+import type { Language } from '../../i18n/types';
+import type { ArchiveEntry } from '../../lib/content';
+import type { TagSummary } from '../../lib/tags';
+import { normalizeTagSlug, tagPath } from '../../lib/tags';
+
+interface Props { language: Language; entries: ArchiveEntry[]; tags: TagSummary[]; }
+const { language, entries, tags } = Astro.props;
+const copy = language === 'zh'
+  ? { type: '内容类型', tag: '标签', all: '全部', articles: '文章', projects: '项目', results: '条内容', empty: '还没有公开内容', emptyBody: '发布文章或项目后，这里会自动形成时间线。' }
+  : { type: 'Content type', tag: 'Tag', all: 'All', articles: 'Articles', projects: 'Projects', results: 'items', empty: 'No public content yet', emptyBody: 'Articles and Projects will form a timeline here after publishing.' };
+---
+
+<template data-controls-template>
+  <div class="filters" data-filter-controls>
+    <label>{copy.type}<select data-type-filter><option value="all">{copy.all}</option><option value="article">{copy.articles}</option><option value="project">{copy.projects}</option></select></label>
+    <label>{copy.tag}<select data-tag-filter><option value="all">{copy.all}</option>{tags.map((tag) => <option value={tag.slug}>{tag.name} · {tag.count}</option>)}</select></label>
+    <span role="status" aria-live="polite"></span>
+  </div>
+</template>
+
+<div class="archive" data-archive data-result-suffix={copy.results}>
+  {entries.length === 0 ? <EmptyState title={copy.empty} body={copy.emptyBody} /> : (
+    <ol>
+      {entries.map((entry) => (
+        <li data-archive-entry data-type={entry.type} data-tags={entry.tags.map(normalizeTagSlug).join(',')}>
+          <time datetime={entry.publishedAt.toISOString()}>{entry.publishedAt.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en')}</time>
+          <div><p>{entry.type === 'article' ? copy.articles : copy.projects}</p><h2><a href={entry.href}>{entry.title}</a></h2><p>{entry.summary}</p>
+            <ul aria-label={copy.tag}>{entry.tags.map((tag) => <li><a href={tagPath(tag, language)}>{tag}</a></li>)}</ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-archive]').forEach((archive) => {
+    const template = archive.previousElementSibling as HTMLTemplateElement | null;
+    const controls = template?.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
+    if (!controls) return;
+    archive.before(controls);
+    const typeSelect = controls.querySelector<HTMLSelectElement>('[data-type-filter]');
+    const tagSelect = controls.querySelector<HTMLSelectElement>('[data-tag-filter]');
+    const status = controls.querySelector<HTMLElement>('[role="status"]');
+    const rows = [...archive.querySelectorAll<HTMLElement>('[data-archive-entry]')];
+    const params = new URLSearchParams(location.search);
+    const requestedType = params.get('type');
+    const requestedTag = params.get('tag');
+    if (typeSelect && (requestedType === 'article' || requestedType === 'project')) typeSelect.value = requestedType;
+    if (tagSelect && requestedTag) {
+      if (![...tagSelect.options].some((option) => option.value === requestedTag)) tagSelect.add(new Option(requestedTag, requestedTag));
+      tagSelect.value = requestedTag;
+    }
+
+    const update = () => {
+      const type = typeSelect?.value ?? 'all';
+      const tag = tagSelect?.value ?? 'all';
+      let visible = 0;
+      rows.forEach((row) => {
+        const matchesType = type === 'all' || row.dataset.type === type;
+        const matchesTag = tag === 'all' || (row.dataset.tags ?? '').split(',').includes(tag);
+        row.hidden = !(matchesType && matchesTag);
+        if (!row.hidden) visible += 1;
+      });
+      if (status) status.textContent = `${visible} ${archive.dataset.resultSuffix ?? ''}`;
+      const next = new URLSearchParams();
+      if (type !== 'all') next.set('type', type);
+      if (tag !== 'all') next.set('tag', tag);
+      history.replaceState(null, '', `${location.pathname}${next.size ? `?${next}` : ''}`);
+    };
+    typeSelect?.addEventListener('change', update);
+    tagSelect?.addEventListener('change', update);
+    update();
+  });
+</script>
+
+<style>
+  .filters { display: grid; grid-template-columns: repeat(2, minmax(0, 14rem)) 1fr; gap: 1rem; align-items: end; margin-bottom: 2rem; padding: 1rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); }
+  .filters label { display: grid; gap: 0.45rem; color: var(--color-muted); font-size: 0.78rem; font-weight: 700; }
+  .filters select { min-height: 2.65rem; padding: 0.55rem 2.3rem 0.55rem 0.75rem; border: 1px solid var(--color-line-strong); border-radius: 0.6rem; background: var(--color-page); color: var(--color-ink); }
+  [role='status'] { justify-self: end; padding-bottom: 0.7rem; color: var(--color-accent); font-family: ui-monospace, monospace; font-size: 0.78rem; }
+  ol { display: grid; margin: 0; padding: 0; list-style: none; }
+  ol > li { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 2rem; padding-block: 2rem; border-top: 1px solid var(--color-line); }
+  ol > li[hidden] { display: none; }
+  time { color: var(--color-accent); font-family: ui-monospace, monospace; font-size: 0.78rem; }
+  li div > p { margin: 0; color: var(--color-muted); line-height: 1.65; }
+  li div > p:first-child { color: var(--color-accent); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+  h2 { margin: 0.45rem 0 0.6rem; font-size: clamp(1.35rem, 3vw, 2rem); letter-spacing: -0.04em; }
+  h2 a:hover { color: var(--color-accent-bright); }
+  ul { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+  ul a { display: inline-flex; padding: 0.25rem 0.55rem; border: 1px solid var(--color-line); border-radius: 999px; color: var(--color-accent-bright); font-size: 0.72rem; }
+  @media (max-width: 40rem) { .filters { grid-template-columns: 1fr; } [role='status'] { justify-self: start; } ol > li { grid-template-columns: 1fr; gap: 0.75rem; } }
+</style>
