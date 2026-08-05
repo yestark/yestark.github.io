@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  body: string;
+  marker?: string;
+}
+
+const { title, body, marker = '✦' } = Astro.props;
+---
+
+<div class="empty-state" data-empty-state>
+  <span aria-hidden="true">{marker}</span>
+  <div>
+    <h2>{title}</h2>
+    <p>{body}</p>
+  </div>
+</div>
+
+<style>
+  .empty-state {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border: 1px dashed var(--color-line);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  }
+
+  .empty-state > span {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  h2,
+  p { margin: 0; }
+
+  h2 { font-size: 1rem; }
+
+  p {
+    margin-top: 0.35rem;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+</style>

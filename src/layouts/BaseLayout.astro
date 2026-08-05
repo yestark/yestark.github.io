@@ -1,0 +1,45 @@
+---
+import Header from '../components/shell/Header.astro';
+import Footer from '../components/shell/Footer.astro';
+import { siteConfig } from '../config/site';
+import { translations } from '../i18n/translations';
+import type { Language, StaticPage } from '../i18n/types';
+import '../styles/global.css';
+
+interface Props {
+  language: Language;
+  page: StaticPage;
+  title: string;
+  description: string;
+  languageSwitchHref: string;
+  alternateHref?: string | undefined;
+}
+
+const { language, page, title, description, languageSwitchHref, alternateHref } = Astro.props;
+const canonical = new URL(Astro.url.pathname, siteConfig.siteUrl);
+const alternateLanguage = language === 'zh' ? 'en' : 'zh-CN';
+---
+
+<!doctype html>
+<html lang={translations[language].locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <link rel="canonical" href={canonical} />
+    {alternateHref && <link rel="alternate" hreflang={alternateLanguage} href={new URL(alternateHref, siteConfig.siteUrl)} />}
+    <link rel="alternate" type="application/rss+xml" title="Stark Ye Thoughts" href="/rss.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{language === 'zh' ? '跳到主要内容' : 'Skip to content'}</a>
+    <Header language={language} currentPage={page} languageSwitchHref={languageSwitchHref} />
+    <main id="main-content" tabindex="-1"><slot /></main>
+    <Footer language={language} />
+  </body>
+</html>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import ThoughtsPreview from '../components/home/ThoughtsPreview.astro';
+import ProjectsPreview from '../components/home/ProjectsPreview.astro';
+import ContactCTA from '../components/home/ContactCTA.astro';
+import MiniAbout from '../components/home/MiniAbout.astro';
+import { translations } from '../i18n/translations';
+import { getPublishedProjects, getPublishedThoughts } from '../lib/content';
+
+const language = 'zh';
+const t = translations[language];
+const thoughts = (await getPublishedThoughts(language)).slice(0, 3);
+const projects = (await getPublishedProjects(language)).toSorted((a, b) => Number(b.data.featured) - Number(a.data.featured)).slice(0, 2);
+---
+
+<BaseLayout
+  language={language}
+  page="home"
+  title="Stark Ye — AI 与全栈产品构建者"
+  description={t.hero.body}
+  languageSwitchHref="/en/"
+  alternateHref="/en/"
+>
+  <Hero language={language} copy={t.hero} />
+  <ThoughtsPreview language={language} entries={thoughts} />
+  <ProjectsPreview language={language} entries={projects} />
+  <ContactCTA language={language} />
+  <MiniAbout language={language} />
+</BaseLayout>

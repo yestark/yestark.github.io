@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { translations } from '../i18n/translations';
+
+const copy = translations.zh.about;
+---
+
+<BaseLayout language="zh" page="about" title="关于 Stark Ye" description={copy.body} languageSwitchHref="/en/about/" alternateHref="/en/about/">
+  <article class="shell about-page">
+    <p class="eyebrow">{copy.eyebrow}</p>
+    <h1>{copy.title}</h1>
+    <p>{copy.body}</p>
+    <section aria-labelledby="background-title">
+      <h2 id="background-title">经历</h2>
+      <p>我的实践围绕 AI 应用与产品、全栈开发与系统展开，也持续记录其中的产品判断和值得保留的想法。</p>
+    </section>
+    <section aria-labelledby="focus-title">
+      <h2 id="focus-title">关注方向</h2>
+      <ul><li>AI-native products</li><li>Full-stack systems</li><li>Product judgment</li><li>Independent ideas</li></ul>
+    </section>
+    <section aria-labelledby="capabilities-title">
+      <h2 id="capabilities-title">技术能力</h2>
+      <ul><li>AI 应用与产品构建</li><li>全栈开发与系统实现</li><li>从产品判断到可用体验</li></ul>
+    </section>
+    <section aria-labelledby="principles-title">
+      <h2 id="principles-title">做事原则</h2>
+      <p>从真实问题出发，保持技术判断清晰，并把想法推进到可以使用的产品。</p>
+    </section>
+    <section aria-labelledby="status-title">
+      <h2 id="status-title">当前状态</h2>
+      <p>目前欢迎与合作者和技术同行交流，尤其是围绕 AI 应用、全栈产品与值得推进的想法。</p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .about-page { max-width: var(--reading-width); padding-block: clamp(3rem, 8vw, 6rem); }
+  .eyebrow { margin: 0 0 0.75rem; }
+  h1 { margin: 0; font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: 1.06; letter-spacing: -0.055em; }
+  h1 + p { margin: 1.5rem 0 0; color: var(--color-muted); font-size: 1.125rem; line-height: 1.75; }
+  section { margin-top: 2.25rem; padding-top: 1.25rem; border-top: 1px solid var(--color-line); }
+  h2 { margin: 0; font-size: 1rem; }
+  ul { display: grid; gap: 0.5rem; margin: 1rem 0 0; padding: 0; list-style: none; color: var(--color-muted); line-height: 1.6; }
+  ul li::before { margin-right: 0.5rem; color: var(--color-accent); content: '—'; }
+  section p { margin: 1rem 0 0; color: var(--color-muted); line-height: 1.75; }
+</style>

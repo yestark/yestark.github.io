@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import EmptyState from '../common/EmptyState.astro';
+import { translations } from '../../i18n/translations';
+import type { Language } from '../../i18n/types';
+import { entryPath, localizedPath } from '../../lib/routes';
+
+interface Props {
+  language: Language;
+  entries: CollectionEntry<'thoughts'>[];
+}
+
+const { language, entries } = Astro.props;
+const copy = translations[language].thoughts;
+---
+
+<section class="content-section shell" data-section="thoughts">
+  <header>
+    <div><p class="eyebrow">{copy.eyebrow}</p><h2>{copy.title}</h2></div>
+    <a href={localizedPath('thoughts', language)}>{copy.all} →</a>
+  </header>
+  {entries.length === 0 ? (
+    <EmptyState title={copy.emptyTitle} body={copy.emptyBody} />
+  ) : (
+    <div class="card-grid">
+      {entries.slice(0, 3).map((entry) => (
+        <article data-content-card>
+          <p><time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en')}</time> · {entry.data.language.toUpperCase()}</p>
+          <h3><a href={entryPath('thoughts', entry)}>{entry.data.title}</a></h3>
+          <p>{entry.data.description}</p>
+        </article>
+      ))}
+    </div>
+  )}
+</section>
+
+<style>
+  .content-section { padding-block: 3.5rem; }
+  header { display: flex; justify-content: space-between; gap: 1rem; align-items: end; margin-bottom: 1.5rem; }
+  header .eyebrow { margin: 0 0 0.5rem; }
+  h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.045em; }
+  header > a { color: var(--color-accent); font-weight: 800; white-space: nowrap; }
+  .card-grid { display: grid; gap: 1rem; }
+  article { padding: 1.5rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-surface); }
+  article p { margin: 0; color: var(--color-muted); line-height: 1.6; }
+  article h3 { margin: 0.7rem 0; font-size: 1.35rem; letter-spacing: -0.03em; }
+  article h3 a:hover { color: var(--color-accent); }
+  @media (min-width: 48rem) { .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

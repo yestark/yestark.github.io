@@ -1,0 +1,41 @@
+---
+import { siteConfig } from '../../config/site';
+import { translations } from '../../i18n/translations';
+import type { Language } from '../../i18n/types';
+
+const { language } = Astro.props as { language: Language };
+const copy = translations[language].contact;
+---
+
+<div class="email-actions" data-copy-email data-email={siteConfig.email} data-success={copy.copied} data-failure={copy.copyFailed}>
+  <a class="button primary" href={`mailto:${siteConfig.email}`}>{copy.email}</a>
+  <button class="button secondary" type="button" hidden>{copy.copy}</button>
+  <span role="status" aria-live="polite"></span>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-copy-email]').forEach((root) => {
+    const button = root.querySelector<HTMLButtonElement>('button');
+    const status = root.querySelector<HTMLElement>('[role="status"]');
+
+    if (button) button.hidden = false;
+    button?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(root.dataset.email ?? '');
+        if (status) status.textContent = root.dataset.success ?? '';
+      } catch {
+        if (status) status.textContent = root.dataset.failure ?? '';
+      }
+    });
+  });
+</script>
+
+<style>
+  .email-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0.75rem 1rem; border: 1px solid transparent; border-radius: 999px; font-weight: 800; cursor: pointer; }
+  .primary { background: var(--color-accent); color: white; }
+  .secondary { background: transparent; border-color: var(--color-line); color: var(--color-ink); }
+  .secondary[hidden] { display: none; }
+  .button:hover { transform: translateY(-1px); }
+  [role='status'] { width: 100%; min-height: 1.5rem; color: var(--color-muted); font-size: 0.875rem; }
+</style>

@@ -1,0 +1,27 @@
+---
+import EmptyState from '../../components/common/EmptyState.astro';
+import ProjectCard from '../../components/common/ProjectCard.astro';
+import ContactCTA from '../../components/home/ContactCTA.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { translations } from '../../i18n/translations';
+import { getPublishedProjects } from '../../lib/content';
+
+const language = 'zh';
+const copy = translations[language].projects;
+const entries = await getPublishedProjects(language);
+---
+
+<BaseLayout language={language} page="projects" title="项目 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/projects/" alternateHref="/en/projects/">
+  <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
+  <section class="shell content-list">
+    {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ProjectCard entry={entry} />)}
+  </section>
+  {entries.length === 0 && <ContactCTA language={language} />}
+</BaseLayout>
+
+<style>
+  .page-intro { padding-top: clamp(3rem, 8vw, 6rem); }
+  .page-intro .eyebrow { margin: 0 0 0.75rem; }
+  h1 { margin: 0; font-size: clamp(2.5rem, 7vw, 4.75rem); letter-spacing: -0.055em; }
+  .content-list { display: grid; gap: 1rem; padding-block: 2rem 0; }
+</style>

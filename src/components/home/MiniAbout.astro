@@ -1,0 +1,50 @@
+---
+import { siteConfig } from '../../config/site';
+import { translations } from '../../i18n/translations';
+import type { Language } from '../../i18n/types';
+import { localizedPath } from '../../lib/routes';
+
+const { language } = Astro.props as { language: Language };
+const copy = translations[language].about;
+---
+
+<aside class="mini-about shell" data-section="mini-about">
+  <span class="mini-monogram" aria-hidden="true">{siteConfig.monogram}</span>
+  <div><strong>{copy.eyebrow}</strong><p>{copy.body}</p></div>
+  <a href={localizedPath('about', language)}>{copy.link} →</a>
+</aside>
+
+<style>
+  .mini-about {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .mini-monogram {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  strong { font-size: 0.875rem; }
+  p { margin: 0.25rem 0 0; color: var(--color-muted); font-size: 0.9rem; line-height: 1.55; }
+  a { margin-left: auto; color: var(--color-accent); font-size: 0.875rem; font-weight: 800; white-space: nowrap; }
+
+  @media (max-width: 48rem) {
+    .mini-about { align-items: flex-start; flex-wrap: wrap; }
+    .mini-about > div { flex: 1 1 14rem; }
+    a { width: 100%; margin-left: 3.5rem; }
+  }
+</style>
