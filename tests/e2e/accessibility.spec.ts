@@ -13,6 +13,23 @@ test('keyboard navigation exposes the skip link and primary navigation', async (
   await page.goto('/');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: '跳到主要内容' })).toBeFocused();
+
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  const primaryLink = page.getByRole('navigation', { name: '主导航' }).getByRole('link', { name: '首页' });
+  await expect(primaryLink).toBeFocused();
+  await expect(primaryLink).toBeVisible();
+  const focusIndicator = await primaryLink.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth), boxShadow: style.boxShadow };
+  });
+  expect(
+    (focusIndicator.outlineStyle !== 'none' && focusIndicator.outlineWidth > 0) || focusIndicator.boxShadow !== 'none',
+  ).toBe(true);
+
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('link', { name: '跳到主要内容' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('#main-content')).toBeFocused();
 });
