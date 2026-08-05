@@ -44,9 +44,6 @@ export async function getPublishedArticles(language?: Language): Promise<Collect
   return language ? entries.filter((entry) => entry.data.language === language) : entries;
 }
 
-/** @deprecated Compatibility while legacy Thoughts routes redirect to Articles. */
-export const getPublishedThoughts = getPublishedArticles;
-
 export async function getPublishedProjects(language?: Language): Promise<CollectionEntry<'projects'>[]> {
   const entries = sortPublishedEntries(await getCollection('projects'));
   return language ? entries.filter((entry) => entry.data.language === language) : entries;

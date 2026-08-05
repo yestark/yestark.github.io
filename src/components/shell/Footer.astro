@@ -2,21 +2,33 @@
 import { siteConfig } from '../../config/site';
 import { translations } from '../../i18n/translations';
 import type { Language } from '../../i18n/types';
+import { localizedPath } from '../../lib/routes';
 
 const { language } = Astro.props as { language: Language };
 ---
 
 <footer>
   <div class="shell footer-inner">
-    <span>© {new Date().getFullYear()} {siteConfig.name}</span>
-    <span>{translations[language].footer}</span>
+    <div class="footer-identity">
+      <span class="footer-mark">SY</span>
+      <div><strong>{siteConfig.name}</strong><span>{translations[language].footer}</span></div>
+    </div>
+    <nav aria-label={language === 'zh' ? '页脚导航' : 'Footer navigation'}>
+      <a href={localizedPath('articles', language)}>{translations[language].nav.articles}</a>
+      <a href={localizedPath('archive', language)}>{translations[language].nav.archive}</a>
+      <a href={language === 'zh' ? '/tags/' : '/en/tags/'}>Tags</a>
+      <a href="/rss.xml">RSS</a>
+      <a href={`mailto:${siteConfig.email}`}>Email</a>
+    </nav>
   </div>
+  <div class="shell footer-meta"><span>© {new Date().getFullYear()} {siteConfig.name}</span><span>starkye.com</span></div>
 </footer>
 
 <style>
   footer {
-    margin-top: 4rem;
+    margin-top: 5rem;
     border-top: 0.0625rem solid var(--color-line);
+    background: rgb(7 8 6 / 68%);
   }
 
   .footer-inner {
@@ -24,18 +36,27 @@ const { language } = Astro.props as { language: Language };
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 5rem;
+    min-height: 7rem;
     color: var(--color-muted);
     font-size: 0.875rem;
   }
 
-  @media (max-width: 30rem) {
+  .footer-identity { display: flex; gap: 0.85rem; align-items: center; }
+  .footer-identity div { display: grid; gap: 0.2rem; }
+  .footer-identity strong { color: var(--color-ink); }
+  .footer-mark { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid var(--color-line-strong); border-radius: 50%; color: var(--color-accent); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; }
+  nav { display: flex; flex-wrap: wrap; gap: 0.45rem 1rem; justify-content: flex-end; }
+  nav a:hover { color: var(--color-accent-bright); }
+  .footer-meta { display: flex; justify-content: space-between; padding-block: 1rem 1.5rem; border-top: 1px solid var(--color-line); color: var(--color-muted); font-size: 0.75rem; }
+
+  @media (max-width: 40rem) {
     .footer-inner {
       align-items: flex-start;
       flex-direction: column;
       justify-content: center;
-      gap: 0.375rem;
-      padding-block: 1rem;
+      gap: 1.5rem;
+      padding-block: 2rem;
     }
+    nav { justify-content: flex-start; }
   }
 </style>

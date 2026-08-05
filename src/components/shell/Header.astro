@@ -18,17 +18,22 @@ const t = translations[language];
 <header class="site-header">
   <div class="shell header-inner">
     <a class="monogram" href={localizedPath('home', language)} aria-label={`${siteConfig.name} home`}>
-      {siteConfig.monogram}
+      <span>{siteConfig.monogram}</span>
     </a>
     <nav aria-label={language === 'zh' ? '主导航' : 'Primary navigation'}>
       <ul>
         {siteConfig.navigation.map((page) => (
-          <li class={page === 'home' || page === 'thoughts' ? undefined : 'secondary-link'}>
+          <li>
             <a href={localizedPath(page, language)} aria-current={page === currentPage ? 'page' : undefined}>
               {t.nav[page]}
             </a>
           </li>
         ))}
+        <li>
+          <a class="contact-link" href={`${localizedPath('home', language)}#contact`}>
+            {language === 'zh' ? '联系我' : 'Contact'}
+          </a>
+        </li>
         <li><LanguageSwitch currentLanguage={language} alternateHref={languageSwitchHref} /></li>
       </ul>
     </nav>
@@ -37,7 +42,9 @@ const t = translations[language];
 
 <style>
   .site-header {
-    background: transparent;
+    position: relative;
+    z-index: 20;
+    padding-top: 1rem;
   }
 
   .header-inner {
@@ -45,54 +52,93 @@ const t = translations[language];
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 5rem;
+    min-height: 4.25rem;
+    padding: 0.55rem 0.65rem 0.55rem 0.8rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: rgb(16 17 15 / 82%);
+    box-shadow: 0 1.25rem 4rem rgb(0 0 0 / 24%);
+    backdrop-filter: blur(1rem);
   }
 
   .monogram {
+    position: relative;
     display: grid;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
     flex: none;
     place-items: center;
-    border-radius: var(--radius-sm);
-    background: var(--color-ink);
-    color: var(--color-surface);
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(232 184 79 / 14%), transparent 65%);
+    color: var(--color-accent-bright);
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
   }
+
+  .monogram::before {
+    position: absolute;
+    width: 2rem;
+    height: 0.8rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 50%;
+    content: '';
+    transform: rotate(-24deg);
+  }
+
+  .monogram span { position: relative; }
+
+  nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
 
   ul {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: clamp(0.3rem, 1vw, 0.9rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   nav a {
+    display: inline-flex;
+    min-height: 2.35rem;
+    align-items: center;
+    padding: 0.45rem 0.65rem;
+    border-radius: 999px;
     color: var(--color-muted);
-    font-size: 0.875rem;
+    font-size: 0.82rem;
     font-weight: 650;
+    white-space: nowrap;
   }
 
   nav a:hover,
   nav a[aria-current='page'] {
-    color: var(--color-ink);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-bright);
   }
 
-  @media (max-width: 38rem) {
+  nav .contact-link {
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent);
+    color: #070806;
+    font-weight: 800;
+  }
+
+  nav .contact-link:hover { background: var(--color-accent-bright); color: #070806; }
+
+  @media (max-width: 48rem) {
+    .site-header { padding-top: 0.65rem; }
     .header-inner {
-      min-height: 4.5rem;
+      width: calc(100% - 1rem);
+      min-height: 3.75rem;
+      padding-block: 0.35rem;
     }
 
-    ul {
-      gap: 0.875rem;
-    }
-
-    .secondary-link {
-      display: none;
-    }
+    .monogram { width: 2.45rem; height: 2.45rem; }
+    nav { margin-right: -0.25rem; }
+    ul { gap: 0.15rem; }
+    nav a { padding-inline: 0.55rem; }
   }
 </style>

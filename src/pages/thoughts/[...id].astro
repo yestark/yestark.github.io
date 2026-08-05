@@ -1,15 +1,15 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import ContentLayout from '../../layouts/ContentLayout.astro';
-import { buildContentPaths, findTranslation, getPublishedThoughts } from '../../lib/content';
+import { buildContentPaths, findTranslation, getPublishedArticles } from '../../lib/content';
 import { entryPath, localizedPath } from '../../lib/routes';
 
 export async function getStaticPaths() {
-  return buildContentPaths(await getPublishedThoughts(), 'zh');
+  return buildContentPaths(await getPublishedArticles(), 'zh');
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<'thoughts'> };
-const translation = findTranslation(await getPublishedThoughts(), entry, 'en');
+const { entry } = Astro.props as { entry: CollectionEntry<'articles'> };
+const translation = findTranslation(await getPublishedArticles(), entry, 'en');
 const alternateHref = translation ? entryPath('thoughts', translation) : undefined;
 const languageSwitchHref = alternateHref ?? localizedPath('thoughts', 'en');
 const { Content } = await render(entry);

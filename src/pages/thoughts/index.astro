@@ -3,11 +3,11 @@ import EmptyState from '../../components/common/EmptyState.astro';
 import ThoughtCard from '../../components/common/ThoughtCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { translations } from '../../i18n/translations';
-import { getPublishedThoughts } from '../../lib/content';
+import { getPublishedArticles } from '../../lib/content';
 
 const language = 'zh';
 const copy = translations[language].thoughts;
-const entries = await getPublishedThoughts(language);
+const entries = await getPublishedArticles(language);
 ---
 
 <BaseLayout language={language} page="thoughts" title="想法 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/thoughts/" alternateHref="/en/thoughts/">
