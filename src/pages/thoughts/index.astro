@@ -1,25 +1,4 @@
 ---
-import EmptyState from '../../components/common/EmptyState.astro';
-import ThoughtCard from '../../components/common/ThoughtCard.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { translations } from '../../i18n/translations';
-import { getPublishedArticles } from '../../lib/content';
-
-const language = 'zh';
-const copy = translations[language].thoughts;
-const entries = await getPublishedArticles(language);
+import RedirectLayout from '../../layouts/RedirectLayout.astro';
 ---
-
-<BaseLayout language={language} page="thoughts" title="想法 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/thoughts/" alternateHref="/en/thoughts/">
-  <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
-  <section class="shell content-list">
-    {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ThoughtCard entry={entry} />)}
-  </section>
-</BaseLayout>
-
-<style>
-  .page-intro { padding-top: clamp(3rem, 8vw, 6rem); }
-  .page-intro .eyebrow { margin: 0 0 0.75rem; }
-  h1 { margin: 0; font-size: clamp(2.5rem, 7vw, 4.75rem); letter-spacing: -0.055em; }
-  .content-list { display: grid; gap: 1rem; padding-block: 2rem clamp(4rem, 8vw, 7rem); }
-</style>
+<RedirectLayout destination="/articles/" title="文章 — Stark Ye" language="zh" />

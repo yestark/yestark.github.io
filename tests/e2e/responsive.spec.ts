@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.use({ viewport: { width: 390, height: 844 } });
 
-for (const route of ['/', '/about/', '/thoughts/', '/projects/', '/contact/', '/en/']) {
+for (const route of ['/', '/about/', '/articles/', '/projects/', '/contact/', '/en/']) {
   test(`${route} has no horizontal overflow on mobile`, async ({ page }) => {
     await page.goto(route);
     const widths = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));

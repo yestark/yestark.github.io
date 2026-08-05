@@ -1,20 +1,11 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
-import ContentLayout from '../../../layouts/ContentLayout.astro';
-import { buildContentPaths, findTranslation, getPublishedArticles } from '../../../lib/content';
-import { entryPath, localizedPath } from '../../../lib/routes';
+import RedirectLayout from '../../../layouts/RedirectLayout.astro';
+import { getPublishedArticles } from '../../../lib/content';
 
 export async function getStaticPaths() {
-  return buildContentPaths(await getPublishedArticles(), 'en');
+  const entries = await getPublishedArticles('en');
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { destination: `/en/articles/${entry.id}/` } }));
 }
-
-const { entry } = Astro.props as { entry: CollectionEntry<'articles'> };
-const translation = findTranslation(await getPublishedArticles(), entry, 'zh');
-const alternateHref = translation ? entryPath('thoughts', translation) : undefined;
-const languageSwitchHref = alternateHref ?? localizedPath('thoughts', 'zh');
-const { Content } = await render(entry);
+const { destination } = Astro.props as { destination: string };
 ---
-
-<ContentLayout language="en" page="thoughts" title={entry.data.title} description={entry.data.description} publishedAt={entry.data.publishedAt} updatedAt={entry.data.updatedAt} tags={entry.data.tags} languageSwitchHref={languageSwitchHref} alternateHref={alternateHref}>
-  <Content />
-</ContentLayout>
+<RedirectLayout destination={destination} title="Article moved — Stark Ye" language="en" />

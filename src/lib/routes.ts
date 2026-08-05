@@ -5,7 +5,6 @@ const segments: Record<StaticPage, string> = {
   about: 'about',
   articles: 'articles',
   archive: 'archive',
-  thoughts: 'thoughts',
   projects: 'projects',
   contact: 'contact',
 };
@@ -16,7 +15,7 @@ export function localizedPath(page: StaticPage, language: Language): string {
   return segment ? `${prefix}/${segment}/` : `${prefix || ''}/`;
 }
 
-export type ContentSection = 'articles' | 'projects' | 'thoughts';
+export type ContentSection = 'articles' | 'projects';
 
 export function entryPath(
   section: ContentSection,

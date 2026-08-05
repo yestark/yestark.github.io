@@ -1,0 +1,26 @@
+---
+import EmptyState from '../../../components/common/EmptyState.astro';
+import ArticleCard from '../../../components/common/ArticleCard.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getPublishedArticles } from '../../../lib/content';
+import { getSiteCopy } from '../../../lib/site-content';
+
+const language = 'en';
+const copy = (await getSiteCopy(language)).articles;
+const entries = await getPublishedArticles(language);
+---
+
+<BaseLayout language={language} page="articles" title="Articles — Stark Ye" description={copy.emptyBody} languageSwitchHref="/articles/" alternateHref="/articles/">
+  <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.emptyBody}</p></section>
+  <section class="shell content-list">
+    {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ArticleCard entry={entry} />)}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-intro { padding-top: clamp(4rem, 9vw, 7rem); }
+  .page-intro .eyebrow { margin: 0 0 0.75rem; }
+  h1 { margin: 0; font-size: clamp(3rem, 8vw, 6.5rem); letter-spacing: -0.065em; line-height: 0.95; }
+  .page-intro > p:last-child { max-width: 40rem; margin: 1.25rem 0 0; color: var(--color-muted); line-height: 1.7; }
+  .content-list { display: grid; gap: 1rem; padding-block: 2.5rem clamp(4rem, 8vw, 7rem); }
+</style>

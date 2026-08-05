@@ -1,0 +1,29 @@
+---
+import { siteConfig } from '../config/site';
+import '../styles/global.css';
+
+interface Props { destination: string; title: string; language: 'zh' | 'en'; }
+const { destination, title, language } = Astro.props;
+const canonical = new URL(destination, siteConfig.siteUrl);
+---
+
+<!doctype html>
+<html lang={language === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content={`0;url=${destination}`} />
+    <link rel="canonical" href={canonical} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main class="shell redirect"><p>{language === 'zh' ? '页面已移动。' : 'This page has moved.'}</p><a href={destination}>{language === 'zh' ? '继续前往文章' : 'Continue to Articles'} →</a></main>
+  </body>
+</html>
+
+<style>
+  .redirect { display: grid; min-height: 100svh; place-content: center; gap: 1rem; text-align: center; }
+  .redirect p { margin: 0; color: var(--color-muted); }
+  .redirect a { color: var(--color-accent-bright); font-weight: 800; }
+</style>

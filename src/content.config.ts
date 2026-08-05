@@ -7,11 +7,6 @@ const articles = defineCollection({
   schema: articleSchema,
 });
 
-const thoughts = defineCollection({
-  loader: glob({ base: './src/content/thoughts', pattern: '**/*.md' }),
-  schema: articleSchema,
-});
-
 const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.md' }),
   schema: projectSchema,
@@ -22,4 +17,4 @@ const site = defineCollection({
   schema: siteCopySchema,
 });
 
-export const collections = { articles, thoughts, projects, site };
+export const collections = { articles, projects, site };

@@ -9,7 +9,7 @@ const projectRoot = fileURLToPath(new URL('../../', import.meta.url));
 const projectFiles = ['astro.config.mjs', 'package.json', 'package-lock.json', 'public', 'src', 'tsconfig.json'];
 let temporaryProject: string;
 
-const thoughtFixtures: Record<string, string> = {
+const articleFixtures: Record<string, string> = {
   'unpaired-detail-test': `---
 title: Unpaired detail test
 description: A temporary test-only unpaired thought.
@@ -99,7 +99,7 @@ async function linkDependencies(): Promise<void> {
   }
 }
 
-async function writeFixtures(directory: 'thoughts' | 'projects', fixtures: Record<string, string>): Promise<void> {
+async function writeFixtures(directory: 'articles' | 'projects', fixtures: Record<string, string>): Promise<void> {
   const destination = join(temporaryProject, 'src', 'content', directory);
   await Promise.all(
     Object.entries(fixtures).map(([id, source]) => writeFile(join(destination, `${id}.md`), source)),
@@ -116,7 +116,7 @@ beforeAll(async () => {
     projectFiles.map((path) => cp(join(projectRoot, path), join(temporaryProject, path), { recursive: true })),
   );
   await linkDependencies();
-  await writeFixtures('thoughts', thoughtFixtures);
+  await writeFixtures('articles', articleFixtures);
   await writeFixtures('projects', projectFixtures);
 
   execFileSync(process.execPath, [join(projectRoot, 'node_modules/astro/bin/astro.mjs'), 'build'], {
@@ -130,23 +130,30 @@ afterAll(async () => {
 });
 
 describe('detail language navigation and metadata', () => {
-  it('sends an unpaired Thought switch to the collection without claiming an SEO translation', async () => {
-    const html = await output('thoughts/unpaired-detail-test/index.html');
+  it('sends an unpaired Article switch to the collection without claiming an SEO translation', async () => {
+    const html = await output('articles/unpaired-detail-test/index.html');
 
     expect(html).not.toContain('<link rel="alternate" hreflang="en"');
-    expect(html).toContain('class="language-switch" href="/en/thoughts/"');
+    expect(html).toContain('class="language-switch" href="/en/articles/"');
     expect(html).toContain('内容语言：中文');
+    expect(html).toContain('href="/tags/test/"');
   });
 
-  it('links a published Thought pair directly with reciprocal SEO alternates', async () => {
-    const chinese = await output('thoughts/paired-detail-test/index.html');
-    const english = await output('en/thoughts/paired-detail-test-en/index.html');
+  it('links a published Article pair directly with reciprocal SEO alternates', async () => {
+    const chinese = await output('articles/paired-detail-test/index.html');
+    const english = await output('en/articles/paired-detail-test-en/index.html');
 
-    expect(chinese).toContain('hreflang="en" href="https://starkye.com/en/thoughts/paired-detail-test-en/"');
-    expect(chinese).toContain('class="language-switch" href="/en/thoughts/paired-detail-test-en/"');
-    expect(english).toContain('hreflang="zh-CN" href="https://starkye.com/thoughts/paired-detail-test/"');
-    expect(english).toContain('class="language-switch" href="/thoughts/paired-detail-test/"');
+    expect(chinese).toContain('hreflang="en" href="https://starkye.com/en/articles/paired-detail-test-en/"');
+    expect(chinese).toContain('class="language-switch" href="/en/articles/paired-detail-test-en/"');
+    expect(english).toContain('hreflang="zh-CN" href="https://starkye.com/articles/paired-detail-test/"');
+    expect(english).toContain('class="language-switch" href="/articles/paired-detail-test/"');
     expect(english).toContain('Content language: English');
+  });
+
+  it('emits explicit legacy redirects for published Article ids', async () => {
+    const html = await output('thoughts/paired-detail-test/index.html');
+    expect(html).toContain('http-equiv="refresh"');
+    expect(html).toContain('/articles/paired-detail-test/');
   });
 
   it('sends an unpaired Project switch to the collection without claiming an SEO translation', async () => {

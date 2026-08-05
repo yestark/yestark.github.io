@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { entryPath } from '../../lib/routes';
+import { tagPath } from '../../lib/tags';
+
+const { entry } = Astro.props as { entry: CollectionEntry<'articles'> };
+const locale = entry.data.language === 'zh' ? 'zh-CN' : 'en';
+---
+
+<article data-article-card data-content-card>
+  <p class="metadata"><time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toLocaleDateString(locale)}</time> · {entry.data.language.toUpperCase()}</p>
+  <h2><a href={entryPath('articles', entry)}>{entry.data.title}</a></h2>
+  <p>{entry.data.description}</p>
+  <ul aria-label={entry.data.language === 'zh' ? '标签' : 'Tags'}>
+    {entry.data.tags.map((tag) => <li><a href={tagPath(tag, entry.data.language)}>{tag}</a></li>)}
+  </ul>
+</article>
+
+<style>
+  article { padding: clamp(1.5rem, 4vw, 2.25rem); border: 1px solid var(--color-line); border-radius: var(--radius-md); background: linear-gradient(145deg, var(--color-surface-2), var(--color-surface)); }
+  p { margin: 0; color: var(--color-muted); line-height: 1.65; }
+  .metadata { color: var(--color-accent); font-family: ui-monospace, monospace; font-size: 0.76rem; letter-spacing: 0.05em; }
+  h2 { margin: 0.8rem 0; font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -0.04em; }
+  h2 a:hover { color: var(--color-accent-bright); }
+  ul { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 1.25rem 0 0; list-style: none; }
+  li a { display: inline-flex; padding: 0.3rem 0.62rem; border: 1px solid var(--color-line); border-radius: 999px; color: var(--color-accent-bright); font-size: 0.75rem; font-weight: 700; }
+  li a:hover { border-color: var(--color-accent); background: var(--color-accent-soft); }
+</style>
