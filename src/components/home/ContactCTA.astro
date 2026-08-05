@@ -1,5 +1,4 @@
 ---
-import { siteConfig } from '../../config/site';
 import type { Language } from '../../i18n/types';
 import { getSiteCopy } from '../../lib/site-content';
 
@@ -13,7 +12,7 @@ const copy = (await getSiteCopy(language)).contact;
     <h2>{copy.title}</h2>
     <p>{copy.body}</p>
   </div>
-  <a class="button" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+  <a class="button" href={`mailto:${copy.email}`}>{copy.email}</a>
 </section>
 
 <style>

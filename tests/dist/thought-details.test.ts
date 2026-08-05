@@ -162,6 +162,7 @@ describe('detail language navigation and metadata', () => {
     expect(html).not.toContain('<link rel="alternate" hreflang="zh-CN"');
     expect(html).toContain('class="language-switch" href="/projects/"');
     expect(html).toContain('Content language: English');
+    expect(html).toContain('href="/en/tags/test/"');
   });
 
   it('links a published Project pair directly with reciprocal SEO alternates', async () => {

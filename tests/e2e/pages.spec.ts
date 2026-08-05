@@ -7,6 +7,7 @@ test('Chinese About covers background, focus, capabilities, principle, and curre
   for (const heading of ['经历', '关注方向', '技术能力', '做事原则', '当前状态']) {
     await expect(page.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
   }
+  await expect(page.getByText('目前欢迎与合作者和技术同行交流')).toBeVisible();
   await expect(page.getByRole('link', { name: 'English' })).toHaveAttribute('href', '/en/about/');
 });
 
@@ -15,6 +16,7 @@ test('English About covers background, focus, capabilities, principle, and curre
   for (const heading of ['Background', 'Focus', 'Capabilities', 'Principle', 'Current status']) {
     await expect(page.getByRole('heading', { level: 2, name: heading, exact: true })).toBeVisible();
   }
+  await expect(page.getByText('I’m open to conversations with collaborators and technical peers')).toBeVisible();
   await expect(page.getByRole('link', { name: '中文' })).toHaveAttribute('href', '/about/');
 });
 

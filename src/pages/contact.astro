@@ -1,10 +1,9 @@
 ---
 import CopyEmail from '../components/common/CopyEmail.astro';
-import { siteConfig } from '../config/site';
-import { translations } from '../i18n/translations';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSiteCopy } from '../lib/site-content';
 
-const copy = translations.zh.contact;
+const copy = (await getSiteCopy('zh')).contact;
 ---
 
 <BaseLayout language="zh" page="contact" title="联系 Stark Ye" description={copy.body} languageSwitchHref="/en/contact/" alternateHref="/en/contact/">
@@ -12,7 +11,7 @@ const copy = translations.zh.contact;
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>
     <p>{copy.body}</p>
-    <a class="email-address" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+    <a class="email-address" href={`mailto:${copy.email}`}>{copy.email}</a>
     <CopyEmail language="zh" />
   </section>
 </BaseLayout>

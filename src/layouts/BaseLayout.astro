@@ -2,8 +2,8 @@
 import Header from '../components/shell/Header.astro';
 import Footer from '../components/shell/Footer.astro';
 import { siteConfig } from '../config/site';
-import { translations } from '../i18n/translations';
 import type { Language, StaticPage } from '../i18n/types';
+import { getSiteCopy } from '../lib/site-content';
 import '../styles/global.css';
 
 interface Props {
@@ -18,10 +18,11 @@ interface Props {
 const { language, page, title, description, languageSwitchHref, alternateHref } = Astro.props;
 const canonical = new URL(Astro.url.pathname, siteConfig.siteUrl);
 const alternateLanguage = language === 'zh' ? 'en' : 'zh-CN';
+const siteCopy = await getSiteCopy(language);
 ---
 
 <!doctype html>
-<html lang={translations[language].locale}>
+<html lang={siteCopy.locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />

@@ -1,14 +1,13 @@
 ---
-import { siteConfig } from '../../config/site';
-import { translations } from '../../i18n/translations';
 import type { Language } from '../../i18n/types';
+import { getSiteCopy } from '../../lib/site-content';
 
 const { language } = Astro.props as { language: Language };
-const copy = translations[language].contact;
+const copy = (await getSiteCopy(language)).contact;
 ---
 
-<div class="email-actions" data-copy-email data-email={siteConfig.email} data-success={copy.copied} data-failure={copy.copyFailed}>
-  <a class="button primary" href={`mailto:${siteConfig.email}`}>{copy.email}</a>
+<div class="email-actions" data-copy-email data-email={copy.email} data-success={copy.copied} data-failure={copy.copyFailed}>
+  <a class="button primary" href={`mailto:${copy.email}`}>{copy.emailLabel}</a>
   <button class="button secondary" type="button" hidden>{copy.copy}</button>
   <span role="status" aria-live="polite"></span>
 </div>

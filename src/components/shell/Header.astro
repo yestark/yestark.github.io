@@ -1,6 +1,5 @@
 ---
-import { siteConfig } from '../../config/site';
-import { translations } from '../../i18n/translations';
+import { navigationLabels, siteConfig } from '../../config/site';
 import type { Language, StaticPage } from '../../i18n/types';
 import { localizedPath } from '../../lib/routes';
 import LanguageSwitch from './LanguageSwitch.astro';
@@ -12,7 +11,7 @@ interface Props {
 }
 
 const { language, currentPage, languageSwitchHref } = Astro.props;
-const t = translations[language];
+const labels = navigationLabels[language];
 ---
 
 <header class="site-header">
@@ -25,7 +24,7 @@ const t = translations[language];
         {siteConfig.navigation.map((page) => (
           <li>
             <a href={localizedPath(page, language)} aria-current={page === currentPage ? 'page' : undefined}>
-              {t.nav[page]}
+              {labels[page]}
             </a>
           </li>
         ))}

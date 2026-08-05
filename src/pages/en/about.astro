@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { translations } from '../../i18n/translations';
+import { getSiteCopy } from '../../lib/site-content';
 
-const copy = translations.en.about;
+const copy = (await getSiteCopy('en')).about;
+const sectionOrder = ['background', 'focus', 'capabilities', 'principle', 'status'] as const;
 ---
 
 <BaseLayout language="en" page="about" title="About Stark Ye" description={copy.body} languageSwitchHref="/about/" alternateHref="/about/">
@@ -10,26 +11,17 @@ const copy = translations.en.about;
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>
     <p>{copy.body}</p>
-    <section aria-labelledby="background-title">
-      <h2 id="background-title">Background</h2>
-      <p>My work centers on AI applications and products, full-stack development and systems, alongside the product judgment and ideas that shape them.</p>
-    </section>
-    <section aria-labelledby="focus-title">
-      <h2 id="focus-title">Focus</h2>
-      <ul><li>AI-native products</li><li>Full-stack systems</li><li>Product judgment</li><li>Independent ideas</li></ul>
-    </section>
-    <section aria-labelledby="capabilities-title">
-      <h2 id="capabilities-title">Capabilities</h2>
-      <ul><li>AI application and product development</li><li>Full-stack development and systems</li><li>Product judgment carried through to usable experiences</li></ul>
-    </section>
-    <section aria-labelledby="principles-title">
-      <h2 id="principles-title">Principle</h2>
-      <p>Start from real problems, keep the engineering judgment clear, and carry ideas through to usable products.</p>
-    </section>
-    <section aria-labelledby="status-title">
-      <h2 id="status-title">Current status</h2>
-      <p>I’m open to conversations with collaborators and technical peers around AI applications, full-stack products, and ideas worth developing.</p>
-    </section>
+    {sectionOrder.map((key) => {
+      const section = copy.sections[key];
+      if (!section) return null;
+      return (
+        <section aria-labelledby={`${key}-title`}>
+          <h2 id={`${key}-title`}>{section.title}</h2>
+          {section.items && <ul>{section.items.map((item) => <li>{item}</li>)}</ul>}
+          {!section.items && <p>{section.body}</p>}
+        </section>
+      );
+    })}
   </article>
 </BaseLayout>
 

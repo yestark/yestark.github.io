@@ -1,24 +1,26 @@
 ---
-import { siteConfig } from '../../config/site';
-import { translations } from '../../i18n/translations';
+import { navigationLabels, siteConfig } from '../../config/site';
 import type { Language } from '../../i18n/types';
 import { localizedPath } from '../../lib/routes';
+import { getSiteCopy } from '../../lib/site-content';
 
 const { language } = Astro.props as { language: Language };
+const copy = await getSiteCopy(language);
+const labels = navigationLabels[language];
 ---
 
 <footer>
   <div class="shell footer-inner">
     <div class="footer-identity">
       <span class="footer-mark">SY</span>
-      <div><strong>{siteConfig.name}</strong><span>{translations[language].footer}</span></div>
+      <div><strong>{siteConfig.name}</strong><span>{copy.footer}</span></div>
     </div>
     <nav aria-label={language === 'zh' ? '页脚导航' : 'Footer navigation'}>
-      <a href={localizedPath('articles', language)}>{translations[language].nav.articles}</a>
-      <a href={localizedPath('archive', language)}>{translations[language].nav.archive}</a>
+      <a href={localizedPath('articles', language)}>{labels.articles}</a>
+      <a href={localizedPath('archive', language)}>{labels.archive}</a>
       <a href={language === 'zh' ? '/tags/' : '/en/tags/'}>Tags</a>
       <a href="/rss.xml">RSS</a>
-      <a href={`mailto:${siteConfig.email}`}>Email</a>
+      <a href={`mailto:${copy.contact.email}`}>Email</a>
     </nav>
   </div>
   <div class="shell footer-meta"><span>© {new Date().getFullYear()} {siteConfig.name}</span><span>starkye.com</span></div>

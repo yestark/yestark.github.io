@@ -3,11 +3,11 @@ import EmptyState from '../../components/common/EmptyState.astro';
 import ProjectCard from '../../components/common/ProjectCard.astro';
 import ContactCTA from '../../components/home/ContactCTA.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { translations } from '../../i18n/translations';
 import { getPublishedProjects } from '../../lib/content';
+import { getSiteCopy } from '../../lib/site-content';
 
 const language = 'zh';
-const copy = translations[language].projects;
+const copy = (await getSiteCopy(language)).projects;
 const entries = await getPublishedProjects(language);
 ---
 
