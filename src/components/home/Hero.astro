@@ -1,0 +1,133 @@
+---
+import { translations } from '../../i18n/translations';
+import type { Language } from '../../i18n/types';
+import { localizedPath } from '../../lib/routes';
+
+interface Props {
+  language: Language;
+  copy: typeof translations.zh.hero | typeof translations.en.hero;
+}
+
+const { language, copy } = Astro.props;
+---
+
+<section class="hero shell" data-section="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <p class="status"><span aria-hidden="true"></span>{copy.status}</p>
+  <p class="intro">{copy.intro}</p>
+  <h1>{copy.title}</h1>
+  <p class="hero-body">{copy.body}</p>
+  <div class="hero-actions">
+    <a class="button primary" href={localizedPath('thoughts', language)}>{copy.thoughtsCta}</a>
+    <a class="button secondary" href={localizedPath('about', language)}>{copy.aboutCta}</a>
+  </div>
+  <aside aria-label={language === 'zh' ? '当前关注' : 'Current focus'}>
+    <span>AI-native products</span><span>Full-stack systems</span><span>Ideas worth keeping</span>
+  </aside>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(5.5rem, 13vw, 10rem) 4rem;
+  }
+
+  .hero-glow {
+    position: absolute;
+    z-index: -1;
+    top: 1rem;
+    right: -8rem;
+    width: min(42rem, 72vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(78 92 246 / 24%), rgb(78 92 246 / 0%) 68%);
+    filter: blur(0.25rem);
+  }
+
+  .status,
+  .intro,
+  .hero-body { margin: 0; }
+
+  .status {
+    display: inline-flex;
+    gap: 0.55rem;
+    align-items: center;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .status span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 0.3rem rgb(78 92 246 / 13%);
+  }
+
+  .intro {
+    margin-top: 2.25rem;
+    color: var(--color-accent);
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 800;
+  }
+
+  h1 {
+    max-width: 12ch;
+    margin: 0.6rem 0 1.25rem;
+    font-size: clamp(3.25rem, 8vw, 7.25rem);
+    line-height: 0.95;
+    letter-spacing: -0.07em;
+  }
+
+  .hero-body {
+    max-width: 40rem;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    line-height: 1.75;
+  }
+
+  .hero-actions,
+  aside {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions { margin-top: 2rem; }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.9rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-ink);
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  .primary { background: var(--color-ink); color: white; }
+  .secondary { background: rgb(255 255 255 / 70%); }
+  .button:hover { transform: translateY(-1px); }
+
+  aside { margin-top: 4.5rem; }
+
+  aside span {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 58%);
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  @media (max-width: 48rem) {
+    .hero { padding-top: 4.5rem; }
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .button { width: 100%; }
+    aside { margin-top: 3rem; }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+import { siteConfig } from '../../config/site';
+import { translations } from '../../i18n/translations';
+import type { Language } from '../../i18n/types';
+
+const { language } = Astro.props as { language: Language };
+const copy = translations[language].contact;
+---
+
+<section class="contact-section shell" data-section="contact">
+  <div>
+    <p class="eyebrow">{copy.eyebrow}</p>
+    <h2>{copy.title}</h2>
+    <p>{copy.body}</p>
+  </div>
+  <a class="button" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+</section>
+
+<style>
+  .contact-section {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-block: 3.5rem;
+    padding: clamp(2.5rem, 7vw, 4.5rem);
+    border-radius: var(--radius-lg);
+    background: var(--color-accent);
+    color: white;
+  }
+
+  .eyebrow { margin: 0 0 0.75rem; color: rgb(255 255 255 / 76%); }
+  h2 { max-width: 17ch; margin: 0; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.03; letter-spacing: -0.05em; }
+  p:not(.eyebrow) { max-width: 37rem; margin: 1rem 0 0; color: rgb(255 255 255 / 82%); line-height: 1.7; }
+  .button { display: inline-flex; flex: none; padding: 0.85rem 1rem; border-radius: 999px; background: var(--color-ink); color: white; font-weight: 800; }
+  .button:hover { transform: translateY(-1px); }
+
+  @media (max-width: 48rem) {
+    .contact-section { align-items: flex-start; flex-direction: column; }
+    .button { width: 100%; justify-content: center; }
+  }
+</style>
