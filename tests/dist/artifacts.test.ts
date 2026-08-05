@@ -41,10 +41,6 @@ function links(html: string): Record<string, string>[] {
   return [...html.matchAll(/<link\b[^>]*>/gi)].map(([element]) => attributes(element));
 }
 
-function metaTags(html: string): Record<string, string>[] {
-  return [...html.matchAll(/<meta\b[^>]*>/gi)].map(([element]) => attributes(element));
-}
-
 function required(value: string | undefined, context: string): string {
   if (value === undefined) throw new Error(`Unable to read ${context}`);
   return value;
@@ -77,7 +73,7 @@ describe('GitHub Pages artifact', () => {
         .map((link) => link.href);
       const canonical = urlForOutput(file);
 
-      if (metaTags(html).some((meta) => meta.name === 'robots' && meta.content === 'noindex')) {
+      if (file === join(dist, '404.html')) {
         expect(canonicalHrefs, `${file} canonical`).toEqual([]);
       } else {
         expect(canonicalHrefs, `${file} canonical`).toEqual([canonical]);
