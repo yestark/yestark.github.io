@@ -28,7 +28,7 @@ Add `src/content/thoughts/<slug>.md`:
 ```yaml
 ---
 title: "文章标题"
-description: "用于列表与搜索摘要的一句话"
+description: "用于列表、RSS 与 SEO 摘要的一句话"
 publishedAt: 2026-08-06
 tags: [AI, Full-stack]
 language: zh

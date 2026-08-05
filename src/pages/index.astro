@@ -19,6 +19,7 @@ const projects = (await getPublishedProjects(language)).toSorted((a, b) => Numbe
   page="home"
   title="Stark Ye — AI 与全栈产品构建者"
   description={t.hero.body}
+  languageSwitchHref="/en/"
   alternateHref="/en/"
 >
   <Hero language={language} copy={t.hero} />

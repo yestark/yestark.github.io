@@ -11,10 +11,11 @@ interface Props {
   page: StaticPage;
   title: string;
   description: string;
+  languageSwitchHref: string;
   alternateHref?: string | undefined;
 }
 
-const { language, page, title, description, alternateHref } = Astro.props;
+const { language, page, title, description, languageSwitchHref, alternateHref } = Astro.props;
 const canonical = new URL(Astro.url.pathname, siteConfig.siteUrl);
 const alternateLanguage = language === 'zh' ? 'en' : 'zh-CN';
 ---
@@ -37,7 +38,7 @@ const alternateLanguage = language === 'zh' ? 'en' : 'zh-CN';
   </head>
   <body>
     <a class="skip-link" href="#main-content">{language === 'zh' ? '跳到主要内容' : 'Skip to content'}</a>
-    <Header language={language} currentPage={page} alternateHref={alternateHref} />
+    <Header language={language} currentPage={page} languageSwitchHref={languageSwitchHref} />
     <main id="main-content" tabindex="-1"><slot /></main>
     <Footer language={language} />
   </body>

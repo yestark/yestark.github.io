@@ -10,7 +10,7 @@ const copy = translations[language].thoughts;
 const entries = await getPublishedThoughts(language);
 ---
 
-<BaseLayout language={language} page="thoughts" title="想法 — Stark Ye" description={copy.emptyBody} alternateHref="/en/thoughts/">
+<BaseLayout language={language} page="thoughts" title="想法 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/thoughts/" alternateHref="/en/thoughts/">
   <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
   <section class="shell content-list">
     {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ThoughtCard entry={entry} />)}

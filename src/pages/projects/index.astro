@@ -11,7 +11,7 @@ const copy = translations[language].projects;
 const entries = await getPublishedProjects(language);
 ---
 
-<BaseLayout language={language} page="projects" title="项目 — Stark Ye" description={copy.emptyBody} alternateHref="/en/projects/">
+<BaseLayout language={language} page="projects" title="项目 — Stark Ye" description={copy.emptyBody} languageSwitchHref="/en/projects/" alternateHref="/en/projects/">
   <section class="shell page-intro"><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></section>
   <section class="shell content-list">
     {entries.length === 0 ? <EmptyState title={copy.emptyTitle} body={copy.emptyBody} /> : entries.map((entry) => <ProjectCard entry={entry} />)}

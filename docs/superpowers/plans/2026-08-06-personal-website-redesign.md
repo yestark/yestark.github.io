@@ -1688,6 +1688,8 @@ The visible email address remains selectable on Contact pages even if clipboard 
 
 - [ ] **Step 4: Implement bilingual About pages**
 
+Keep both pages compact while covering background, focus, capabilities, principle, and current status. Use only the approved positioning around AI applications and products, full-stack development and systems, product judgment and ideas, and openness to collaborators and technical peers; do not invent employers, degrees, years, clients, metrics, or credentials.
+
 Create `src/pages/about.astro`:
 
 ```astro
@@ -1701,8 +1703,11 @@ const copy = translations.zh.about;
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>
     <p>{copy.body}</p>
+    <section aria-labelledby="background-title"><h2 id="background-title">经历</h2><p>我的实践围绕 AI 应用与产品、全栈开发与系统展开，也持续记录其中的产品判断和值得保留的想法。</p></section>
     <section aria-labelledby="focus-title"><h2 id="focus-title">关注方向</h2><ul><li>AI-native products</li><li>Full-stack systems</li><li>Product judgment</li><li>Independent ideas</li></ul></section>
+    <section aria-labelledby="capabilities-title"><h2 id="capabilities-title">技术能力</h2><ul><li>AI 应用与产品构建</li><li>全栈开发与系统实现</li><li>从产品判断到可用体验</li></ul></section>
     <section aria-labelledby="principles-title"><h2 id="principles-title">做事原则</h2><p>从真实问题出发，保持技术判断清晰，并把想法推进到可以使用的产品。</p></section>
+    <section aria-labelledby="status-title"><h2 id="status-title">当前状态</h2><p>目前欢迎与合作者和技术同行交流，尤其是围绕 AI 应用、全栈产品与值得推进的想法。</p></section>
   </article>
 </BaseLayout>
 ```
@@ -1720,8 +1725,11 @@ const copy = translations.en.about;
     <p class="eyebrow">{copy.eyebrow}</p>
     <h1>{copy.title}</h1>
     <p>{copy.body}</p>
+    <section aria-labelledby="background-title"><h2 id="background-title">Background</h2><p>My work centers on AI applications and products, full-stack development and systems, alongside the product judgment and ideas that shape them.</p></section>
     <section aria-labelledby="focus-title"><h2 id="focus-title">Focus</h2><ul><li>AI-native products</li><li>Full-stack systems</li><li>Product judgment</li><li>Independent ideas</li></ul></section>
+    <section aria-labelledby="capabilities-title"><h2 id="capabilities-title">Capabilities</h2><ul><li>AI application and product development</li><li>Full-stack development and systems</li><li>Product judgment carried through to usable experiences</li></ul></section>
     <section aria-labelledby="principles-title"><h2 id="principles-title">Principle</h2><p>Start from real problems, keep the engineering judgment clear, and carry ideas through to usable products.</p></section>
+    <section aria-labelledby="status-title"><h2 id="status-title">Current status</h2><p>I’m open to conversations with collaborators and technical peers around AI applications, full-stack products, and ideas worth developing.</p></section>
   </article>
 </BaseLayout>
 ```
@@ -2121,7 +2129,7 @@ Add `src/content/thoughts/<slug>.md`:
 ```yaml
 ---
 title: "文章标题"
-description: "用于列表与搜索摘要的一句话"
+description: "用于列表、RSS 与 SEO 摘要的一句话"
 publishedAt: 2026-08-06
 tags: [AI, Full-stack]
 language: zh

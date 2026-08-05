@@ -8,10 +8,10 @@ import LanguageSwitch from './LanguageSwitch.astro';
 interface Props {
   language: Language;
   currentPage: StaticPage;
-  alternateHref?: string | undefined;
+  languageSwitchHref: string;
 }
 
-const { language, currentPage, alternateHref } = Astro.props;
+const { language, currentPage, languageSwitchHref } = Astro.props;
 const t = translations[language];
 ---
 
@@ -29,7 +29,7 @@ const t = translations[language];
             </a>
           </li>
         ))}
-        {alternateHref && <li><LanguageSwitch currentLanguage={language} alternateHref={alternateHref} /></li>}
+        <li><LanguageSwitch currentLanguage={language} alternateHref={languageSwitchHref} /></li>
       </ul>
     </nav>
   </div>

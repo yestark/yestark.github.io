@@ -10,6 +10,7 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date | undefined;
   tags: string[];
+  languageSwitchHref: string;
   alternateHref?: string | undefined;
 }
 
@@ -17,7 +18,7 @@ const props = Astro.props;
 const locale = props.language === 'zh' ? 'zh-CN' : 'en';
 ---
 
-<BaseLayout language={props.language} page={props.page} title={`${props.title} — Stark Ye`} description={props.description} alternateHref={props.alternateHref}>
+<BaseLayout language={props.language} page={props.page} title={`${props.title} — Stark Ye`} description={props.description} languageSwitchHref={props.languageSwitchHref} alternateHref={props.alternateHref}>
   <article class="content shell">
     <header>
       <p class="eyebrow">{props.page}</p>
@@ -26,6 +27,7 @@ const locale = props.language === 'zh' ? 'zh-CN' : 'en';
       <div class="metadata">
         <time datetime={props.publishedAt.toISOString()}>{props.publishedAt.toLocaleDateString(locale)}</time>
         {props.updatedAt && <span>{props.language === 'zh' ? '更新于' : 'Updated'} {props.updatedAt.toLocaleDateString(locale)}</span>}
+        <span class="content-language">{props.language === 'zh' ? '内容语言：中文' : 'Content language: English'}</span>
       </div>
       <ul aria-label={props.language === 'zh' ? '标签' : 'Tags'}>{props.tags.map((tag) => <li>{tag}</li>)}</ul>
     </header>
