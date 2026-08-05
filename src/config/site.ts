@@ -7,5 +7,5 @@ export const siteConfig = {
   siteUrl: 'https://starkye.com',
   defaultLanguage: 'zh' as Language,
   languages: ['zh', 'en'] as const,
-  navigation: ['home', 'about', 'thoughts', 'projects', 'contact'] as StaticPage[],
+  navigation: ['home', 'articles', 'projects', 'archive', 'about'] as StaticPage[],
 } as const;

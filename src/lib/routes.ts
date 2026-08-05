@@ -3,6 +3,8 @@ import type { Language, StaticPage } from '../i18n/types';
 const segments: Record<StaticPage, string> = {
   home: '',
   about: 'about',
+  articles: 'articles',
+  archive: 'archive',
   thoughts: 'thoughts',
   projects: 'projects',
   contact: 'contact',
@@ -14,7 +16,7 @@ export function localizedPath(page: StaticPage, language: Language): string {
   return segment ? `${prefix}/${segment}/` : `${prefix || ''}/`;
 }
 
-export type ContentSection = 'thoughts' | 'projects';
+export type ContentSection = 'articles' | 'projects' | 'thoughts';
 
 export function entryPath(
   section: ContentSection,
