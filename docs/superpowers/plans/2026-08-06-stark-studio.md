@@ -420,38 +420,28 @@ git add studio/launcher .gitignore tests/studio/unit/launcher.test.ts
 git commit -m "feat: install Stark Studio macOS launcher"
 ```
 
-### Task 8: Documentation, CI Contract, and Full Verification
+### Task 8: Documentation, CI Integration, and Full Verification
 
 **Files:**
 - Modify: `README.md`
 - Create: `docs/STARK-STUDIO.md`
 - Modify: `.github/workflows/deploy.yml`
 - Modify: `package.json`
-- Test: `tests/studio/integration/ci-contract.test.ts` plus all Studio and website suites
+- Test: all Studio and website suites; this task adds no new runtime behavior
 
 **Interfaces:**
 - Produces: documented install/write/publish/recover workflow and CI coverage.
 - Consumes: completed site and Studio.
 
-- [ ] **Step 1: Add a failing CI and documentation contract test**
+- [ ] **Step 1: Run the complete pre-documentation baseline**
 
-```ts
-const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
-const workflow = await readFile('.github/workflows/deploy.yml', 'utf8');
-expect(packageJson.scripts.verify).toContain('studio:verify');
-expect(workflow).toContain('npm run studio:verify');
-expect(await readFile('docs/STARK-STUDIO.md', 'utf8')).toContain('安全同步');
-```
+Run: `npm run studio:build && npm run studio:test && npm run verify`
 
-- [ ] **Step 2: Run the contract test and verify missing integration**
+Expected: PASS before changing CI or documentation; any failure belongs to an earlier task and must be fixed there.
 
-Run: `npm run studio:test -- tests/studio/integration/ci-contract.test.ts`
+- [ ] **Step 2: Add the verification script, CI step, and user documentation**
 
-Expected: FAIL because `studio:verify`, the workflow step, and `docs/STARK-STUDIO.md` do not exist.
-
-- [ ] **Step 3: Document exact user workflows and CI commands**
-
-Document:
+Add `studio:verify` as `npm run studio:build && npm run studio:test`, include it in the root `verify` script, and run it in CI before Pages build. Document:
 
 ```bash
 npm ci
@@ -461,7 +451,13 @@ npm run studio:test
 npm run verify
 ```
 
-Include Dashboard, Markdown, bilingual content, Tags, images, drafts, publish, safe sync, recovery directory, launcher reinstall, and uninstall instructions. Add `studio:verify` as `npm run studio:build && npm run studio:test`, include it in the root `verify` script, and run it in CI before Pages build.
+Include Dashboard, Markdown, bilingual content, Tags, images, drafts, publish, safe sync, recovery directory, launcher reinstall, and uninstall instructions.
+
+- [ ] **Step 3: Run the explicit Studio verification command**
+
+Run: `npm run studio:verify`
+
+Expected: Studio UI build and every Studio unit/integration test pass with zero failures.
 
 - [ ] **Step 4: Run the complete repository gate and visual smoke test**
 
